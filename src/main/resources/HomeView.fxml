@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/1.8.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeController">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <Pane>
+               <children>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label text="LOSOWE FILMY" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <children>
+                                    <ImageView fx:id="joker" fitHeight="180.0" fitWidth="120.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                       <image>
+                                          <Image url="@joker.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fx:id="parasite" fitHeight="180.0" fitWidth="120.0" layoutX="50.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@parasite.jpg" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fx:id="knivesout" fitHeight="180.0" fitWidth="120.0" layoutX="150.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@knivesout.jpg" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fx:id="paatallok" fitHeight="180.0" fitWidth="120.0" layoutX="270.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@paatallok.jpg" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fx:id="nineteenseventeen" fitHeight="180.0" fitWidth="120.0" layoutX="410.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@1917.jpg" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0">
+                           <children>
+                              <Label text="LOSOWY SERIAL" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="150.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="270.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="410.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="110.0">
+                           <children>
+                              <Label text="LOSOWI LUDZIE" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="50.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="150.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="270.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="180.0" fitWidth="120.0" layoutX="410.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@community.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </opaqueInsets>
+                  </VBox>
+               </children>
+            </Pane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
