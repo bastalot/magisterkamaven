@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -72,10 +73,23 @@ public class ViewController implements Initializable {
         }
     }
 
+    @FXML
+    public void handleAddButton(ActionEvent actionEvent) {
+        System.out.println("Add button clicked");
+        try {
+            url = new File("src/main/resources/AddView.fxml").toURI().toURL();
+            AnchorPane view = (AnchorPane) FXMLLoader.load(url);
+            mainPane.setCenter(view);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
    // @FXML
    // public void handlePicClick(javafx.event.ActionEvent actionEvent) {
 
     //}
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -88,6 +102,8 @@ public class ViewController implements Initializable {
             System.out.println(e);
         }
     }
+
+
 
 
 }

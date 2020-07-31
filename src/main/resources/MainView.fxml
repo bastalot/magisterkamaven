@@ -29,7 +29,7 @@
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button layoutX="20.0" layoutY="125.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" text="Button5">
+                        <Button layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="30.0" prefWidth="80.0" text="Dodaj">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>

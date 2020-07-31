@@ -26,7 +26,7 @@
                                     <Insets />
                                  </VBox.margin>
                                  <children>
-                                    <ImageView fx:id="joker" fitHeight="180.0" fitWidth="120.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="movie1" fitHeight="180.0" fitWidth="120.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
                                        <HBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </HBox.margin>
@@ -34,7 +34,7 @@
                                           <Image url="@joker.jpg" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fx:id="parasite" fitHeight="180.0" fitWidth="120.0" layoutX="50.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="movie2" fitHeight="180.0" fitWidth="120.0" layoutX="50.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@parasite.jpg" />
                                        </image>
@@ -42,7 +42,7 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <ImageView fx:id="knivesout" fitHeight="180.0" fitWidth="120.0" layoutX="150.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="movie3" fitHeight="180.0" fitWidth="120.0" layoutX="150.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@knivesout.jpg" />
                                        </image>
@@ -50,7 +50,7 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <ImageView fx:id="paatallok" fitHeight="180.0" fitWidth="120.0" layoutX="270.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="movie4" fitHeight="180.0" fitWidth="120.0" layoutX="270.0" layoutY="10.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@paatallok.jpg" />
                                        </image>
@@ -58,7 +58,7 @@
                                           <Insets right="10.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <ImageView fx:id="nineteenseventeen" fitHeight="180.0" fitWidth="120.0" layoutX="410.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="movie5" fitHeight="180.0" fitWidth="120.0" layoutX="410.0" layoutY="20.0" onMouseClicked="#handlePicClicked" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@1917.jpg" />
                                        </image>
