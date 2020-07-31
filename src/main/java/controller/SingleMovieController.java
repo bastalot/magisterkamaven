@@ -1,76 +1,92 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Base64;
+import java.util.ResourceBundle;
 
-public class HomeController implements Initializable {
+public class SingleMovieController implements Initializable {
+
 
     URL url;
     String id;
 
     @FXML
-    private ImageView movie1;
+    private ImageView single_movie_poster;
 
     @FXML
-    private ImageView movie2;
+    private Button single_movie_edit_button;
 
     @FXML
-    private ImageView movie3;
+    private Label single_movie_title;
 
     @FXML
-    private ImageView movie4;
+    private Button single_movie_back_button;
 
     @FXML
-    private ImageView movie5;
+    private Label single_movie_release_date;
+
+    @FXML
+    private Label single_movie_runtime;
+
+    @FXML
+    private TextFlow single_movie_summary;
 
 
-  /*  public HomeController(ViewController viewController) {
-        this.viewController = viewController;
-    }*/
 
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("przed");
-        try {
-            movie1.setImage(getMovieImage(10));
-            movie1.setId("10");
-            movie2.setImage(getMovieImage(11));
-            movie2.setId("11");
-            movie3.setImage(getMovieImage(13));
-            movie3.setId("13");
-            movie4.setImage(getMovieImage(14));
-            movie4.setId("14");
-            movie5.setImage(getMovieImage(16));
-            movie5.setId("16");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("po");
+
+
     }
 
 
-    public Image getMovieImage(Integer id) throws IOException {
+    public void backtomenu(ActionEvent actionEvent) {
 
-        byte[] bytes = null;
+        try {
+            url = ClassLoader.getSystemResource("MainView.fxml");
+            Parent parent = FXMLLoader.load(url);
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        String link = "http://localhost:8080/movie/" + id.toString() + "/poster";
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setMovieData(String id) throws IOException {
+        System.out.println("single movie id = " + id);
+
+        String link = "http://localhost:8080/movie/" + id;
         HttpURLConnection httpURLConnection;
         StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(link);
@@ -85,9 +101,18 @@ public class HomeController implements Initializable {
             stringBuilder.append(line);
         }
         httpURLConnection.disconnect();
-            //System.out.println(stringBuilder.toString());
-        bytes = Base64.getDecoder().decode(stringBuilder.toString());
-            //System.out.println(bytes);
+
+        JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+
+        single_movie_title.setText(jsonObject.getString("title"));
+        Text text = new Text(jsonObject.getString("summary"));
+        single_movie_summary.getChildren().add(text);
+        single_movie_release_date.setText(jsonObject.getString("release_date"));
+        single_movie_runtime.setText(jsonObject.getString("runtime"));
+
+
+        byte[] bytes = null;
+        bytes = Base64.getDecoder().decode(jsonObject.getString("poster"));
 
         BufferedImage bufferedImage;
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
@@ -109,46 +134,8 @@ public class HomeController implements Initializable {
         }
 
         Image poster = writableImage;
-        return poster;
 
-
-    }
-
-
-
-    public void handlePicClicked(MouseEvent mouseEvent) {
-        ImageView img = (ImageView) mouseEvent.getSource();
-        id = img.getId();
-        System.out.println(id);
-
-
-
-
-
-
-        try {
-
-
-            url = ClassLoader.getSystemResource("SingleMovieView.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader(url);
-            Parent parent = fxmlLoader.load();
-
-            SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.setMovieData(id);
-
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-
-
-
-            stage.show();
-
-
-        } catch(Exception e) {
-            System.out.println(e + " handlePicClicked method HomeController");
-        }
-        System.out.println(id);
+        single_movie_poster.setImage(poster);
 
     }
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SingleMovieController">
+   <children>
+      <HBox>
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="single_movie_poster" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@nopicture.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="single_movie_edit_button" alignment="CENTER" mnemonicParsing="false" text="Edytuj film" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <HBox>
+                     <children>
+                        <Label fx:id="single_movie_title" text="Tytul filmu raz dwa trzy">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="single_movie_back_button" mnemonicParsing="false" onAction="#backtomenu" style="-fx-background-color: #ffffff;" text="POWRÓT DO MENU">
+                           <HBox.margin>
+                              <Insets left="90.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Label fx:id="single_movie_release_date" text="Rok produkcji: XXXX">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="single_movie_runtime" layoutX="10.0" layoutY="65.0" text="XXXXXX">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="350.0" prefWidth="515.0" style="-fx-background-color: #999999;" vbarPolicy="ALWAYS">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="510.0" style="-fx-background-color: #dddddd;">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <HBox prefHeight="37.0" prefWidth="508.0" style="-fx-background-color: #cccccc;">
+                                             <children>
+                                                <Label text="Podsumowanie:">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <Pane prefHeight="200.0" prefWidth="265.0" />
+                                             </children>
+                                          </HBox>
+                                          <TextFlow fx:id="single_movie_summary" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="490.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </TextFlow>
+                                          <HBox layoutX="10.0" layoutY="177.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #cccccc;">
+                                             <children>
+                                                <Label text="Obsada:">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <Pane prefHeight="200.0" prefWidth="265.0" />
+                                                <Button mnemonicParsing="false" text="Dodaj">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="100.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

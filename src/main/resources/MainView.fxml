@@ -8,7 +8,7 @@
     <children>
         <BorderPane fx:id="mainPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <left>
-                <VBox prefWidth="100.0" BorderPane.alignment="CENTER">
+                <VBox prefWidth="100.0" style="-fx-background-color: #bbbbbb;" BorderPane.alignment="CENTER">
                     <children>
                         <Button mnemonicParsing="false" onAction="#handleHomeButton" prefHeight="30.0" prefWidth="80.0" text="Home">
                             <VBox.margin>
