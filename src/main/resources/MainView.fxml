@@ -10,26 +10,26 @@
             <left>
                 <VBox prefWidth="100.0" style="-fx-background-color: #bbbbbb;" BorderPane.alignment="CENTER">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#handleHomeButton" prefHeight="30.0" prefWidth="80.0" text="Home">
+                        <Button mnemonicParsing="false" onAction="#handleHomeButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" text="Home">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin></Button>
-                        <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleMoviesButton" prefHeight="30.0" prefWidth="80.0" text="Filmy">
+                        <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleMoviesButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" text="Filmy">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button layoutX="20.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleSeriesButton" prefHeight="30.0" prefWidth="80.0" text="Seriale">
+                        <Button layoutX="20.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleSeriesButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" text="Seriale">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#handlePeopleButton" prefHeight="30.0" prefWidth="80.0" text="Aktorzy">
+                        <Button layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#handlePeopleButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" text="Aktorzy">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>
                         </Button>
-                        <Button layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="30.0" prefWidth="80.0" text="Dodaj">
+                        <Button layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" text="Dodaj">
                             <VBox.margin>
                                 <Insets left="10.0" top="10.0" />
                             </VBox.margin>

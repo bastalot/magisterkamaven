@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,7 @@ public class SingleMovieController implements Initializable {
 
     URL url;
     String id;
+    Image poster;
 
     @FXML
     private ImageView single_movie_poster;
@@ -79,12 +81,9 @@ public class SingleMovieController implements Initializable {
 
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setMovieData(String id) throws IOException {
         System.out.println("single movie id = " + id);
+        this.id = id;
 
         String link = "http://localhost:8080/movie/" + id;
         HttpURLConnection httpURLConnection;
@@ -102,17 +101,35 @@ public class SingleMovieController implements Initializable {
         }
         httpURLConnection.disconnect();
 
+        System.out.println(stringBuilder.toString());
+
         JSONObject jsonObject = new JSONObject(stringBuilder.toString());
 
-        single_movie_title.setText(jsonObject.getString("title"));
-        Text text = new Text(jsonObject.getString("summary"));
-        single_movie_summary.getChildren().add(text);
-        single_movie_release_date.setText(jsonObject.getString("release_date"));
-        single_movie_runtime.setText(jsonObject.getString("runtime"));
+        if (jsonObject.get("title").toString() != "null") {
+            single_movie_title.setText(jsonObject.getString("title"));
+        } else single_movie_title.setText("Nie znaleziono tytulu");
+
+        if (jsonObject.get("summary").toString() != "null") {
+            Text text = new Text(jsonObject.getString("summary"));
+            single_movie_summary.getChildren().add(text);
+        } else {
+            Text text = new Text("Brak opisu filmu.");
+            single_movie_summary.getChildren().add(text);
+        }
+
+        if (jsonObject.get("release_date").toString() != "null") {
+            single_movie_release_date.setText(jsonObject.get("release_date").toString());
+        } else single_movie_release_date.setText("Brak informacji o roku");
+
+        if (jsonObject.get("runtime").toString() != "null"){
+            single_movie_runtime.setText(jsonObject.get("runtime").toString());
+        } else single_movie_runtime.setText("Brak informacji o czasie trwania");
+
 
 
         byte[] bytes = null;
-        bytes = Base64.getDecoder().decode(jsonObject.getString("poster"));
+        if (jsonObject.get("poster").toString() != "null"){
+        bytes = Base64.getDecoder().decode(jsonObject.get("poster").toString());
 
         BufferedImage bufferedImage;
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
@@ -133,10 +150,46 @@ public class SingleMovieController implements Initializable {
             }
         }
 
-        Image poster = writableImage;
+        poster = writableImage;
 
-        single_movie_poster.setImage(poster);
+        single_movie_poster.setImage(poster); }
+        else {
+            FileInputStream fileInputStream = new FileInputStream("src/main/resources/nopicture.jpg");
+            poster = new Image(fileInputStream);
+        }
+
 
     }
 
+    public void editmoviebutton(ActionEvent actionEvent) {
+
+        try{
+            url = ClassLoader.getSystemResource("EditSingleMovieView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            Parent parent = fxmlLoader.load();
+
+
+            ObservableList<Node> textFlowList = single_movie_summary.getChildren();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Node node : textFlowList) {
+                stringBuilder.append((((Text)node).getText()));
+            }
+            String summary = stringBuilder.toString();
+
+
+            EditSingleMovieController editSingleMovieController = fxmlLoader.getController();
+            editSingleMovieController.loadCurrentData(id, single_movie_title.getText(),
+                    single_movie_release_date.getText(), single_movie_runtime.getText(),
+                    summary, poster);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+
+            stage.show();
+
+        } catch (Exception e){
+            System.out.println(e + " editmoviebutton");
+        }
+    }
 }

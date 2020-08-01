@@ -49,18 +49,34 @@ public class HomeController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("przed");
         try {
-            movie1.setImage(getMovieImage(10));
             movie1.setId("10");
+            movie1.setImage(getMovieImage(10));
+        } catch (Exception e) {
+            System.out.println(e + " movie1");
+        }
+        try {
             movie2.setImage(getMovieImage(11));
             movie2.setId("11");
-            movie3.setImage(getMovieImage(13));
-            movie3.setId("13");
+        } catch (Exception e) {
+            System.out.println(e + " movie2");
+        }
+        try{
+            movie3.setImage(getMovieImage(17));
+            movie3.setId("17");
+         } catch (Exception e) {
+                System.out.println(e + " movie3");
+        }
+        try {
             movie4.setImage(getMovieImage(14));
             movie4.setId("14");
+        } catch (Exception e) {
+            System.out.println(e + " movie4");
+        }
+        try{
             movie5.setImage(getMovieImage(16));
             movie5.setId("16");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e + " movie5");
         }
         System.out.println("po");
     }
@@ -120,10 +136,6 @@ public class HomeController implements Initializable {
         ImageView img = (ImageView) mouseEvent.getSource();
         id = img.getId();
         System.out.println(id);
-
-
-
-
 
 
         try {

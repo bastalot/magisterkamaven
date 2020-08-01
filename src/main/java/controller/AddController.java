@@ -131,23 +131,29 @@ public class AddController {
     @FXML
     void addmovieposter(ActionEvent event) {
 
-        FileChooser file = new FileChooser();
-        file.setTitle("Wybierz plik graficzny plakatu");
-        //file.showOpenDialog(new Stage());
-        file.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
-        file.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPEG", "*.jpeg"));
-        file.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Wybierz plik graficzny plakatu");
+        //fileChooser.showOpenDialog(new Stage());
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPEG", "*.jpeg"));
+        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
 
-        File image = file.showOpenDialog(new Stage());
 
-        if(file != null) {
-            try {
-                poster = Files.readAllBytes(image.toPath());
-            } catch (IOException e) {
-                System.err.println("Plik nie mogl zostac wczytany do byte[]");
+        try {
+            File image = fileChooser.showOpenDialog(new Stage());
+
+            if (fileChooser != null) {
+                try {
+                    poster = Files.readAllBytes(image.toPath());
+                } catch (IOException e) {
+                    System.err.println("Plik nie mogl zostac wczytany do byte[]");
+                }
+                movie_poster_name.setText(image.getName());
             }
-            movie_poster_name.setText(image.getName());
+        } catch (Exception e) {
+            System.out.println(e + " zamkniete okno dialogowe");
         }
+
 
     }
 
