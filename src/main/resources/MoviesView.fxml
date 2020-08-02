@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/1.8.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MoviesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MoviesController">
    <children>
       <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
             <Pane>
                <children>
-                  <ToolBar layoutX="-9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="44.0" prefWidth="661.0">
-                     <items>
-                        <TextField promptText="Szukaj..." />
-                        <Pane prefHeight="44.0" prefWidth="300.0" />
-                        <DatePicker accessibleRole="MENU_ITEM">
-                           <opaqueInsets>
-                              <Insets right="100.0" />
-                           </opaqueInsets>
-                        </DatePicker>
-                     </items>
-                  </ToolBar>
+                  <VBox fx:id="movies_view_main_box">
+                     <children>
+                        <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="661.0">
+                           <items>
+                              <ComboBox fx:id="movies_combo_box" onAction="#pickYear" prefWidth="150.0" promptText="Wybierz rok" />
+                              <Pane prefHeight="44.0" prefWidth="330.0">
+                                 <children>
+                                    <Label alignment="CENTER" text="FILMY">
+                                       <padding>
+                                          <Insets left="150.0" top="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                 </children></Pane>
+                              <TextField fx:id="movies_search" onAction="#searchMovie" promptText="Szukaj..." />
+                           </items>
+                        </ToolBar>
+                     </children>
+                  </VBox>
                </children>
             </Pane>
          </content>

@@ -20,8 +20,8 @@
                         <Image url="@nopicture.jpg" />
                      </image>
                   </ImageView>
-                  <Button fx:id="single_movie_edit_button" alignment="CENTER" mnemonicParsing="false" onAction="#editmoviebutton" style="-fx-background-color: #ffffff;" text="Edytuj film" />
-                  <Button fx:id="single_movie_back_button" mnemonicParsing="false" onAction="#backtomenu" style="-fx-background-color: #ffffff;" text="POWRÓT DO MENU">
+                  <Button fx:id="single_movie_edit_button" alignment="CENTER" mnemonicParsing="false" onAction="#editMovie" style="-fx-background-color: #ffffff;" text="Edytuj film" />
+                  <Button fx:id="single_movie_back_button" mnemonicParsing="false" onAction="#backToMenu" style="-fx-background-color: #ffffff;" text="POWRÓT DO MENU">
                      <padding>
                         <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
                      </padding>

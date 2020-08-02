@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -23,7 +24,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
@@ -34,6 +34,8 @@ public class SingleMovieController implements Initializable {
     URL url;
     String id;
     Image poster;
+    byte[] bytes = null;
+    String lastView;
 
     @FXML
     private ImageView single_movie_poster;
@@ -66,22 +68,38 @@ public class SingleMovieController implements Initializable {
     }
 
 
-    public void backtomenu(ActionEvent actionEvent) {
+    public void backToMenu(ActionEvent actionEvent) {
 
-        try {
+        try {/*
             url = ClassLoader.getSystemResource("MainView.fxml");
             Parent parent = FXMLLoader.load(url);
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.show();*/
+
+            url = ClassLoader.getSystemResource("MainView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            Parent parent = fxmlLoader.load();
+            ViewController viewController = fxmlLoader.getController();
+
+            URL url2 = ClassLoader.getSystemResource(lastView);
+            AnchorPane view = (AnchorPane) FXMLLoader.load(url2);
+            viewController.mainPane.setCenter(view);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
             stage.show();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void setMovieData(String id) throws IOException {
+    public void getMovieData(String id) throws IOException {
         System.out.println("single movie id = " + id);
         this.id = id;
 
@@ -126,8 +144,8 @@ public class SingleMovieController implements Initializable {
         } else single_movie_runtime.setText("Brak informacji o czasie trwania");
 
 
+        System.out.println(jsonObject.get("poster").toString());
 
-        byte[] bytes = null;
         if (jsonObject.get("poster").toString() != "null"){
         bytes = Base64.getDecoder().decode(jsonObject.get("poster").toString());
 
@@ -161,7 +179,7 @@ public class SingleMovieController implements Initializable {
 
     }
 
-    public void editmoviebutton(ActionEvent actionEvent) {
+    public void editMovie(ActionEvent actionEvent) {
 
         try{
             url = ClassLoader.getSystemResource("EditSingleMovieView.fxml");
@@ -178,9 +196,10 @@ public class SingleMovieController implements Initializable {
 
 
             EditSingleMovieController editSingleMovieController = fxmlLoader.getController();
-            editSingleMovieController.loadCurrentData(id, single_movie_title.getText(),
+            editSingleMovieController.loadInitialData(id, single_movie_title.getText(),
                     single_movie_release_date.getText(), single_movie_runtime.getText(),
                     summary, poster);
+            editSingleMovieController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -191,5 +210,9 @@ public class SingleMovieController implements Initializable {
         } catch (Exception e){
             System.out.println(e + " editmoviebutton");
         }
+    }
+
+    public void getLastView(String lastView) {
+        this.lastView = lastView;
     }
 }

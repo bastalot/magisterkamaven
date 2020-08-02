@@ -12,6 +12,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -55,26 +56,26 @@ public class HomeController implements Initializable {
             System.out.println(e + " movie1");
         }
         try {
-            movie2.setImage(getMovieImage(11));
             movie2.setId("11");
+            movie2.setImage(getMovieImage(11));
         } catch (Exception e) {
             System.out.println(e + " movie2");
         }
         try{
-            movie3.setImage(getMovieImage(17));
             movie3.setId("17");
+            movie3.setImage(getMovieImage(17));
          } catch (Exception e) {
                 System.out.println(e + " movie3");
         }
         try {
-            movie4.setImage(getMovieImage(14));
             movie4.setId("14");
+            movie4.setImage(getMovieImage(14));
         } catch (Exception e) {
             System.out.println(e + " movie4");
         }
         try{
-            movie5.setImage(getMovieImage(16));
             movie5.setId("16");
+            movie5.setImage(getMovieImage(16));
         } catch (Exception e) {
             System.out.println(e + " movie5");
         }
@@ -86,7 +87,7 @@ public class HomeController implements Initializable {
 
         byte[] bytes = null;
 
-        String link = "http://localhost:8080/movie/" + id.toString() + "/poster";
+        String link = "http://localhost:8080/movie/" + id.toString();
         HttpURLConnection httpURLConnection;
         StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(link);
@@ -102,29 +103,37 @@ public class HomeController implements Initializable {
         }
         httpURLConnection.disconnect();
             //System.out.println(stringBuilder.toString());
-        bytes = Base64.getDecoder().decode(stringBuilder.toString());
+
+        JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+
+        if (jsonObject.get("poster").toString() != "null") {
+            bytes = Base64.getDecoder().decode(jsonObject.get("poster").toString());
+        }
+            //bytes = Base64.getDecoder().decode(stringBuilder.toString());
             //System.out.println(bytes);
 
-        BufferedImage bufferedImage;
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        try{
-            bufferedImage = ImageIO.read(byteArrayInputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-        WritableImage writableImage = null;
-        if(bufferedImage != null) {
-            writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
-            PixelWriter pixelWriter = writableImage.getPixelWriter();
-            for (int x = 0; x < bufferedImage.getWidth(); x++) {
-                for (int y = 0; y < bufferedImage.getHeight(); y++) {
-                    pixelWriter.setArgb(x, y, bufferedImage.getRGB(x, y));
+            BufferedImage bufferedImage;
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            try {
+                bufferedImage = ImageIO.read(byteArrayInputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            WritableImage writableImage = null;
+            if (bufferedImage != null) {
+                writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
+                PixelWriter pixelWriter = writableImage.getPixelWriter();
+                for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                    for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                        pixelWriter.setArgb(x, y, bufferedImage.getRGB(x, y));
+                    }
                 }
             }
-        }
 
-        Image poster = writableImage;
+            Image poster = writableImage;
+
         return poster;
 
 
@@ -146,7 +155,9 @@ public class HomeController implements Initializable {
             Parent parent = fxmlLoader.load();
 
             SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.setMovieData(id);
+            singleMovieController.getMovieData(id);
+            singleMovieController.getLastView("HomeView.fxml");
+
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
@@ -159,6 +170,7 @@ public class HomeController implements Initializable {
 
         } catch(Exception e) {
             System.out.println(e + " handlePicClicked method HomeController");
+            System.err.println(e);
         }
         System.out.println(id);
 

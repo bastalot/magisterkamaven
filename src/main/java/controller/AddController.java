@@ -10,7 +10,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -51,7 +50,7 @@ public class AddController {
     private String summary = "";
     private String release_date = "";
     private String runtime = "";
-    private byte[] poster = null;
+    private byte[] bytes = null;
 
     @FXML
     void addmovie(ActionEvent event) throws IOException {
@@ -96,8 +95,8 @@ public class AddController {
         jsonObject.put("runtime", runtime);
         else jsonObject.put("runtime", null);
 
-        if(poster != null) {
-            jsonObject.put("poster", Base64.getEncoder().encodeToString(poster));
+        if(bytes != null) {
+            jsonObject.put("poster", Base64.getEncoder().encodeToString(bytes));
         } else {
             jsonObject.put("poster", null);
         }
@@ -144,7 +143,7 @@ public class AddController {
 
             if (fileChooser != null) {
                 try {
-                    poster = Files.readAllBytes(image.toPath());
+                    bytes = Files.readAllBytes(image.toPath());
                 } catch (IOException e) {
                     System.err.println("Plik nie mogl zostac wczytany do byte[]");
                 }
