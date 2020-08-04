@@ -116,12 +116,173 @@
                         </Tab>
                       <Tab text="DODAJ SERIAL">
                         <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="488.0" />
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="488.0">
+                                 <children>
+                                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Label text="Nazwa serialu:">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" right="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField id="movietitle" fx:id="series_title">
+                                                   <HBox.margin>
+                                                      <Insets left="18.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label fx:id="movieError1" textFill="RED">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox layoutX="10.0" layoutY="10.0">
+                                             <children>
+                                                <Label text="Rok rozpoczęcia: ">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField id="movietitle" fx:id="series_start_year">
+                                                   <HBox.margin>
+                                                      <Insets left="2.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox layoutX="20.0" layoutY="45.0">
+                                             <children>
+                                                <Label text="Rok zakończenia: ">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField id="movietitle" fx:id="series_end_year" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <VBox.margin>
+                                                <Insets left="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <Label text="Opis serialu:">
+                                             <VBox.margin>
+                                                <Insets left="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <TextArea fx:id="series_summary" prefHeight="200.0" prefWidth="450.0" wrapText="true">
+                                             <VBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </VBox.margin>
+                                          </TextArea>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <Button fx:id="add_series_poster" mnemonicParsing="false" onAction="#addmovieposter" text="Dodaj plakat">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                                <Label fx:id="movie_poster_name1">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <Button fx:id="add_series_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addmovie" prefHeight="40.0" prefWidth="100.0" text="Dodaj">
+                                             <VBox.margin>
+                                                <Insets left="277.0" />
+                                             </VBox.margin>
+                                          </Button>
+                                          <Label fx:id="label_added_movie1">
+                                             <VBox.margin>
+                                                <Insets left="277.0" />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets top="5.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children></AnchorPane>
                         </content>
                       </Tab>
                       <Tab text="DODAJ OSOBĘ">
                         <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Label text="Imię i nazwisko:">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" right="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField id="movietitle" fx:id="person_name">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label fx:id="movieError11" textFill="RED">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox layoutX="20.0" layoutY="45.0">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <VBox.margin>
+                                                <Insets left="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
+                                             <children>
+                                                <Button fx:id="add_person_role" mnemonicParsing="false" onAction="#addmovieposter" text="Dodaj rolę (opcjonalnie)">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                                <Label fx:id="movie_poster_name11">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <Button fx:id="add_movie_button11" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addmovie" prefHeight="40.0" prefWidth="100.0" text="Dodaj">
+                                             <VBox.margin>
+                                                <Insets left="277.0" />
+                                             </VBox.margin>
+                                          </Button>
+                                          <Label fx:id="label_added_movie11">
+                                             <VBox.margin>
+                                                <Insets left="277.0" />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets top="5.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children></AnchorPane>
                         </content>
                       </Tab>
                     </tabs>

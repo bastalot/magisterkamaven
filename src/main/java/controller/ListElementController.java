@@ -35,6 +35,52 @@ public class ListElementController implements Initializable {
     public ListElementController() {
     }
 
+    public ListElementController(String id, String titleString, String yearString, String dbId) {
+        this.id = id;
+        this.titleString = titleString;
+        this.yearString = yearString;
+        this.dbId = dbId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitleString() {
+        return titleString;
+    }
+
+    public void setTitleString(String titleString) {
+        this.titleString = titleString;
+    }
+
+    public String getYearString() {
+        return yearString;
+    }
+
+    public void setYearString(String yearString) {
+        this.yearString = yearString;
+    }
+
+    public String getDbId() {
+        return dbId;
+    }
+
+    public void setDbId(String dbId) {
+        this.dbId = dbId;
+    }
+
+    public void setValues() {
+        listElement.setId(id);
+        title.setText(titleString);
+        year.setText(yearString);
+    }
+
+    /*
     public void setElementData(String id, String title, String year, String dbId) {
         this.id = id;
         listElement.setId(id);
@@ -43,7 +89,7 @@ public class ListElementController implements Initializable {
         this.yearString = year;
         this.year.setText("(" + year + ")");
         this.dbId = dbId;
-    }
+    }*/
 
     public void listElementClicked(MouseEvent mouseEvent) {
 
