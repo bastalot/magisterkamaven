@@ -31,8 +31,6 @@ public class AddController {
 
     //person
     public TextField person_name;
-    public ListView person_role_list_view;
-    public Button add_person_role;
     public Button add_person_button;
     public Label person_error_label;
     public Label person_role_added;
@@ -73,6 +71,8 @@ public class AddController {
     private String runtime = "";
     private byte[] bytesMovie = null;
     private byte[] bytesSeries = null;
+    private String personName = "";
+
 
     @FXML
     void addmovie(ActionEvent event) throws IOException {
@@ -150,6 +150,12 @@ public class AddController {
             JsonObject jsonReasponse = (JsonObject) jsonParser.parse(reader);
             System.out.println("id dodanego filmu: " + jsonReasponse.get("id_movie").toString());
         }
+        movie_title.clear();
+        movie_runtime.clear();
+        movie_summary.clear();
+        movie_year.clear();
+        movie_poster_name.setText("");
+
         System.out.println("Add Movie button executed");
     }
 
@@ -236,9 +242,9 @@ public class AddController {
 
         jsonObject.put("title", title);
 
-        /*if(summary.length()>1)
+        if(summary.length()>1)
             jsonObject.put("summary", summary);
-        else jsonObject.put("summary", null);*/
+        else jsonObject.put("summary", null);
 
         if(release_date.length()>1)
             jsonObject.put("start_year", release_date);
@@ -332,14 +338,65 @@ public class AddController {
         }
         con1.disconnect();
 
+        series_start_year.clear();
+        series_end_year.clear();
+        series_title.clear();
+        series_summary.clear();
+        series_poster_name_label.setText("");
         System.out.println("Add Series button executed");
 
     }
 
-    public void addpersonrole(ActionEvent actionEvent) {
-    }
+    public void addperson(ActionEvent actionEvent) throws IOException {
 
-    public void addperson(ActionEvent actionEvent) {
+        System.out.println("add person button clicked");
+
+        personName = person_name.getText();
+
+        if (personName.length()<4) {
+            person_error_label.setText("Imię i nazwisko nie może być krótsze niż 4 znaki, wprowadź poprawną wartość");
+            return;
+        } else
+            person_error_label.setText("");
+
+        URL url = new URL("http://localhost:8080/person");
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+        httpURLConnection.setRequestProperty("Accept", "application/json");
+        httpURLConnection.setDoOutput(true);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("person_name", personName);
+
+        StringWriter out = new StringWriter();
+        jsonObject.writeJSONString(out);
+        String jsonText = out.toString();
+
+        try(OutputStream os = httpURLConnection.getOutputStream()) {
+            byte[] input = jsonObject.toString().getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        System.out.println(jsonText);
+
+        try(BufferedReader br = new BufferedReader(
+                new InputStreamReader(httpURLConnection.getInputStream(), "utf-8"))){
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            System.out.println(response.toString());
+            Reader reader = new StringReader(response.toString());
+            JsonParser jsonParser = new JsonParser();
+            JsonObject jsonResponse = (JsonObject) jsonParser.parse(reader);
+            System.out.println(jsonResponse.get("id_person").toString() + " / " + jsonResponse.get("person_name").toString());
+        }
+        httpURLConnection.disconnect();
+        person_name.clear();
+        person_added_label.setText("Dodano");
+        System.out.println("add person button executed");
     }
 
 

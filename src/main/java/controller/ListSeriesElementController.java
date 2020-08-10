@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ListElementController implements Initializable {
+public class ListSeriesElementController implements Initializable {
 
 
 
@@ -32,10 +32,10 @@ public class ListElementController implements Initializable {
     public Pane listElement;
 
 
-    public ListElementController() {
+    public ListSeriesElementController() {
     }
 
-    public ListElementController(String id, String titleString, String yearString, String dbId) {
+    public ListSeriesElementController(String id, String titleString, String yearString, String dbId) {
         this.id = id;
         this.titleString = titleString;
         this.yearString = yearString;
@@ -80,35 +80,24 @@ public class ListElementController implements Initializable {
         year.setText(yearString);
     }
 
-    /*
-    public void setElementData(String id, String title, String year, String dbId) {
-        this.id = id;
-        listElement.setId(id);
-        this.titleString = title;
-        this.title.setText(title);
-        this.yearString = year;
-        this.year.setText("(" + year + ")");
-        this.dbId = dbId;
-    }*/
-
     public void listElementClicked(MouseEvent mouseEvent) {
 
         try {
 
-            URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
+            URL url = ClassLoader.getSystemResource("SingleSeriesView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             Parent parent = fxmlLoader.load();
 
-            SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.getMovieData(dbId);
-            singleMovieController.getLastView("MoviesView.fxml");
+            SingleSeriesController singleSeriesController = fxmlLoader.getController();
+            singleSeriesController.getSeriesData(dbId);
+            singleSeriesController.setLastView("SeriesView.fxml");
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
 
         } catch (IOException e) {
-            System.out.println(e + " ListElementController listElementClicked");
+            System.out.println(e + " ListSeriesElementController listElementClicked");
         }
 
     }

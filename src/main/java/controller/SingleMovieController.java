@@ -70,13 +70,7 @@ public class SingleMovieController implements Initializable {
 
     public void backToMenu(ActionEvent actionEvent) {
 
-        try {/*
-            url = ClassLoader.getSystemResource("MainView.fxml");
-            Parent parent = FXMLLoader.load(url);
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();*/
+        try {
 
             url = ClassLoader.getSystemResource("MainView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);

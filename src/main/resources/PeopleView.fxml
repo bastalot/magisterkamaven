@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/1.8.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PeopleController">
    <children>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <Pane>
+      <Pane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox fx:id="series_view_main_box">
                <children>
-                  <ToolBar layoutX="-9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="44.0" prefWidth="661.0">
+                  <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="670.0">
                      <items>
-                        <TextField promptText="Szukaj..." />
-                        <Pane prefHeight="44.0" prefWidth="300.0" />
+                        <Pane prefHeight="44.0" prefWidth="500.0">
+                           <children>
+                              <Label alignment="CENTER" text="AKTORZY">
+                                 <padding>
+                                    <Insets left="270.0" top="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <TextField fx:id="peoples_search" onAction="#searchPeople" promptText="Szukaj..." />
                      </items>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </ToolBar>
+                  <ListView fx:id="peoples_list_view" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="670.0" />
                </children>
-            </Pane>
-         </content>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </ScrollPane>
+            </VBox>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

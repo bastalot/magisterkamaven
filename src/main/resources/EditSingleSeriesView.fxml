@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditSingleSeriesController">
+   <children>
+      <HBox>
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="edit_series_poster" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@nopicture.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="edit_series_poster_button" alignment="CENTER" mnemonicParsing="false" onAction="#getNewPosterFromFile" style="-fx-background-color: #ffffff;" text="Edytuj plakat" />
+                  <Button fx:id="edit_series_delete_button" alignment="CENTER" layoutX="88.0" layoutY="350.0" mnemonicParsing="false" onAction="#deleteSeries" style="-fx-background-color: #ff6666;" text="USUŃ SERIAL">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="edit_series_back_button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToSingleSeriesView" prefHeight="31.0" prefWidth="148.0" style="-fx-background-color: #ffffff;" text="WRÓĆ">
+                     <padding>
+                        <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="55.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <HBox>
+                     <children>
+                        <Label text="Nazwa serialu:">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="seriestitle" fx:id="edit_series_title" text="Nazwa serialu">
+                           <HBox.margin>
+                              <Insets left="18.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Label fx:id="series_error_label" textFill="RED">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0">
+                     <children>
+                        <Label text="Rok rozpoczęcia: ">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="seriesstartyear" fx:id="edit_series_start_year" text="XXXX">
+                           <HBox.margin>
+                              <Insets left="2.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="20.0" layoutY="45.0">
+                     <children>
+                        <Label text="Rok zakończenia: ">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="seriesendyear" fx:id="edit_series_end_year" text="XXXX"/>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Label text="Opis serialu:">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </Label>
+                  <TextArea fx:id="edit_series_summary" prefHeight="200.0" prefWidth="500.0" text="Opis serialu..." wrapText="true">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </TextArea>
+                  <Button fx:id="save_edit_series_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setSeriesData" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" text="ZAPISZ">
+                     <VBox.margin>
+                        <Insets left="200.0" top="110.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Label fx:id="label_added_series">
+                     <VBox.margin>
+                        <Insets left="200.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

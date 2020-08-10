@@ -1,30 +1,17 @@
 package controller;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import javax.swing.*;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -38,8 +25,8 @@ public class MoviesController implements Initializable {
     public ComboBox<String> movies_combo_box;
     @FXML
     public TextField movies_search;
-    @FXML
-    public VBox movies_view_main_box;
+    //@FXML
+    //public VBox movies_view_main_box;
     @FXML
     public ListView<Pane> movies_list_view;
 
@@ -55,14 +42,14 @@ public class MoviesController implements Initializable {
         }
 
 
-        Map<Integer, ListElementController> allMovies;
+        Map<Integer, ListMovieElementController> allMovies;
         try {
             allMovies = getAllMovies();
             System.out.println(allMovies.size());
 
 
             HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListElementController> entry: allMovies.entrySet()) {
+            for (Map.Entry<Integer, ListMovieElementController> entry: allMovies.entrySet()) {
                 toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
             }
 
@@ -74,23 +61,23 @@ public class MoviesController implements Initializable {
                 //System.out.println(entry.getKey() + " / " + entry.getValue());
                 i++;
 
-                URL url = new File("src/main/resources/ListElement.fxml").toURI().toURL();
+                URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
                 FXMLLoader fxmlLoader = new FXMLLoader(url);
                 Pane pane = (Pane) fxmlLoader.load();
 
-                ListElementController listElementController = fxmlLoader.getController();
+                ListMovieElementController listMovieElementController = fxmlLoader.getController();
 
-                ListElementController listElementController1 = allMovies.get(entry.getKey());
+                ListMovieElementController listMovieElementController1 = allMovies.get(entry.getKey());
 
                 if (i % 2 == 1){
-                    listElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                    listMovieElementController.listElement.setStyle("-fx-background-color: #ffffff");
                 }
 
-                listElementController.setId(listElementController1.getId());
-                listElementController.setTitleString(listElementController1.getTitleString());
-                listElementController.setYearString(listElementController1.getYearString());;
-                listElementController.setDbId(listElementController1.getDbId());
-                listElementController.setValues();
+                listMovieElementController.setId(listMovieElementController1.getId());
+                listMovieElementController.setTitleString(listMovieElementController1.getTitleString());
+                listMovieElementController.setYearString(listMovieElementController1.getYearString());;
+                listMovieElementController.setDbId(listMovieElementController1.getDbId());
+                listMovieElementController.setValues();
 
                 //movies_view_main_box.getChildren().add(pane);\
                 movies_list_view.getItems().add(pane);
@@ -104,7 +91,7 @@ public class MoviesController implements Initializable {
            for (Map.Entry<Integer, ListElementController> entry : allMovies.entrySet()) {
                //System.out.println(entry.getKey() + " / " + entry.getValue().getTitleString());
 
-               URL url = new File("src/main/resources/ListElement.fxml").toURI().toURL();
+               URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
                FXMLLoader fxmlLoader = new FXMLLoader(url);
                Pane pane = (Pane) fxmlLoader.load();
 
@@ -144,13 +131,13 @@ public class MoviesController implements Initializable {
         }
 
 
-        Map<Integer, ListElementController> allMovies;
+        Map<Integer, ListMovieElementController> allMovies;
         try {
             allMovies = getAllMovies();
             System.out.println(allMovies.size());
 
             HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListElementController> entry: allMovies.entrySet()) {
+            for (Map.Entry<Integer, ListMovieElementController> entry: allMovies.entrySet()) {
                 toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
             }
 
@@ -162,23 +149,23 @@ public class MoviesController implements Initializable {
                 //System.out.println(entry.getKey() + " / " + entry.getValue());
                 i++;
 
-                URL url = new File("src/main/resources/ListElement.fxml").toURI().toURL();
+                URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
                 FXMLLoader fxmlLoader = new FXMLLoader(url);
                 Pane pane = (Pane) fxmlLoader.load();
 
-                ListElementController listElementController = fxmlLoader.getController();
+                ListMovieElementController listMovieElementController = fxmlLoader.getController();
 
-                ListElementController listElementController1 = allMovies.get(entry.getKey());
+                ListMovieElementController listMovieElementController1 = allMovies.get(entry.getKey());
 
                 if (i % 2 == 1){
-                    listElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                    listMovieElementController.listElement.setStyle("-fx-background-color: #ffffff");
                 }
 
-                listElementController.setId(listElementController1.getId());
-                listElementController.setTitleString(listElementController1.getTitleString());
-                listElementController.setYearString(listElementController1.getYearString());;
-                listElementController.setDbId(listElementController1.getDbId());
-                listElementController.setValues();
+                listMovieElementController.setId(listMovieElementController1.getId());
+                listMovieElementController.setTitleString(listMovieElementController1.getTitleString());
+                listMovieElementController.setYearString(listMovieElementController1.getYearString());;
+                listMovieElementController.setDbId(listMovieElementController1.getDbId());
+                listMovieElementController.setValues();
 
 
                 pickedYearGlobal = movies_combo_box.getValue();
@@ -186,14 +173,14 @@ public class MoviesController implements Initializable {
 
                 if(searchGlobal.equals("")){
                     System.out.println("pick year if 1");
-                    if (listElementController.getYearString().equals(pickedYear)){
+                    if (listMovieElementController.getYearString().equals(pickedYear)){
                         movies_list_view.getItems().add(pane);
                         System.out.println("pick year if 1.1");
                     }
 
                 } else {
                     System.out.println("pick year else 1");
-                    if (pickedYear.equals(listElementController.getYearString()) && listElementController.getTitleString().toLowerCase().contains(searchGlobal)) {
+                    if (pickedYear.equals(listMovieElementController.getYearString()) && listMovieElementController.getTitleString().toLowerCase().contains(searchGlobal)) {
                         System.out.println("pick year else 1.1");
                         movies_list_view.getItems().add(pane);
                     }
@@ -223,13 +210,13 @@ public class MoviesController implements Initializable {
             movies_list_view.setItems(entries);
         }
 
-        Map<Integer, ListElementController> allMovies;
+        Map<Integer, ListMovieElementController> allMovies;
         try {
             allMovies = getAllMovies();
             System.out.println(allMovies.size());
 
             HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListElementController> entry: allMovies.entrySet()) {
+            for (Map.Entry<Integer, ListMovieElementController> entry: allMovies.entrySet()) {
                 toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
             }
 
@@ -241,38 +228,38 @@ public class MoviesController implements Initializable {
                 //System.out.println(entry.getKey() + " / " + entry.getValue());
                 i++;
 
-                URL url = new File("src/main/resources/ListElement.fxml").toURI().toURL();
+                URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
                 FXMLLoader fxmlLoader = new FXMLLoader(url);
                 Pane pane = (Pane) fxmlLoader.load();
 
-                ListElementController listElementController = fxmlLoader.getController();
+                ListMovieElementController listMovieElementController = fxmlLoader.getController();
 
-                ListElementController listElementController1 = allMovies.get(entry.getKey());
+                ListMovieElementController listMovieElementController1 = allMovies.get(entry.getKey());
 
                 if (i % 2 == 1){
-                    listElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                    listMovieElementController.listElement.setStyle("-fx-background-color: #ffffff");
                 }
 
-                listElementController.setId(listElementController1.getId());
-                listElementController.setTitleString(listElementController1.getTitleString());
-                listElementController.setYearString(listElementController1.getYearString());;
-                listElementController.setDbId(listElementController1.getDbId());
-                listElementController.setValues();
+                listMovieElementController.setId(listMovieElementController1.getId());
+                listMovieElementController.setTitleString(listMovieElementController1.getTitleString());
+                listMovieElementController.setYearString(listMovieElementController1.getYearString());;
+                listMovieElementController.setDbId(listMovieElementController1.getDbId());
+                listMovieElementController.setValues();
 
                 searchGlobal = movies_search.textProperty().getValue().toLowerCase();
 
                 if (pickedYearGlobal.equals("Wybierz rok")){
                     System.out.println("search movie if 1");
-                    if (listElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase())) {
+                    if (listMovieElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase())) {
                         movies_list_view.getItems().add(pane);
                         System.out.println("search movie if 1.1");
                     }
 
                 } else {
                     String pickedYear = "(" + pickedYearGlobal + ")";
-                    String tempYear = listElementController.getYearString();
+                    String tempYear = listMovieElementController.getYearString();
                     System.out.println("search movie else 1 "+pickedYear+ " / "+tempYear + " | " + searchGlobal + " / " + movies_search.textProperty().getValue().toLowerCase());
-                    if (listElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear) )) {
+                    if (listMovieElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear) )) {
                         movies_list_view.getItems().add(pane);
                         System.out.println("search movie else 1.1");
                     }
@@ -289,9 +276,9 @@ public class MoviesController implements Initializable {
 
 
 
-    public Map<Integer, ListElementController> getAllMovies() throws IOException, ParseException {
+    public Map<Integer, ListMovieElementController> getAllMovies() throws IOException, ParseException {
 
-        Map<Integer, ListElementController> movies = new HashMap<>();
+        Map<Integer, ListMovieElementController> movies = new HashMap<>();
 
         String link = "http://localhost:8080/movie/all";
         URL url = new URL(link);
@@ -306,34 +293,34 @@ public class MoviesController implements Initializable {
             JsonObject movieObj = moviesJsonArray.get(i).getAsJsonObject();
 
             try {
-                url = new File("src/main/resources/ListElement.fxml").toURI().toURL();
+                url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
                 FXMLLoader fxmlLoader = new FXMLLoader(url);
                 Pane pane = (Pane) fxmlLoader.load();
 
-                ListElementController listElementController = fxmlLoader.getController();
+                ListMovieElementController listMovieElementController = fxmlLoader.getController();
                 if (i % 2 == 1) {
-                    listElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                    listMovieElementController.listElement.setStyle("-fx-background-color: #ffffff");
                 }
 
                 if ((movieObj.get("title").toString().equals("null"))) {
-                    listElementController.setTitleString("Brak tytułu");
+                    listMovieElementController.setTitleString("Brak tytułu");
                 } else {
-                    listElementController.setTitleString(movieObj.get("title").getAsString());
+                    listMovieElementController.setTitleString(movieObj.get("title").getAsString());
                 }
 
                 if ((movieObj.get("release_date").toString().equals("null"))) {
-                    listElementController.setYearString("(Brak)");
+                    listMovieElementController.setYearString("(Brak)");
                 } else {
-                    listElementController.setYearString("(" + movieObj.get("release_date").getAsString() + ")");
+                    listMovieElementController.setYearString("(" + movieObj.get("release_date").getAsString() + ")");
                 }
 
-                listElementController.setId(String.valueOf(i));
-                listElementController.setDbId(movieObj.get("id_movie").getAsString());
-                listElementController.setValues();
+                listMovieElementController.setId(String.valueOf(i));
+                listMovieElementController.setDbId(movieObj.get("id_movie").getAsString());
+                listMovieElementController.setValues();
 
                 //movies.add(new ListElementController(listElementController.getId(), listElementController.getTitleString(),listElementController.getYearString(), listElementController.getDbId()));
 
-                movies.put(i, listElementController);
+                movies.put(i, listMovieElementController);
 
             } catch (Exception e) {
                 System.out.println(e + " MoviesController get movies");

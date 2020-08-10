@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SingleSeriesController">
+   <children>
+      <HBox>
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="single_series_poster" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@nopicture.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="single_series_edit_button" alignment="CENTER" mnemonicParsing="false" onAction="#editSeries" style="-fx-background-color: #ffffff;" text="Edytuj serial" />
+                  <Label alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="200.0" text="Gatunki: ">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="single_series_back_button" mnemonicParsing="false" onAction="#backToMenu" style="-fx-background-color: #ffffff;" text="POWRÓT DO MENU">
+                     <padding>
+                        <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label fx:id="single_series_title" alignment="TOP_LEFT" prefHeight="70.0" prefWidth="500.0" text="Nazwa serialu raz dwa trzy bardzo dlugi tytul ale to baaardzo dlugi tytul taki dlugi ze sie nie miesci" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="single_series_start_year" text="Lata: XXXX">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="single_series_end_year" layoutX="15.0" layoutY="100.0" text="Lata: XXXX">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="single_series_runtime" layoutX="10.0" layoutY="65.0" text="XXXXXX">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="320.0" prefWidth="515.0" style="-fx-background-color: #999999;" vbarPolicy="ALWAYS">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="510.0" style="-fx-background-color: #dddddd;">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <HBox prefHeight="37.0" prefWidth="508.0" style="-fx-background-color: #cccccc;">
+                                             <children>
+                                                <Label text="Podsumowanie:">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <Pane prefHeight="200.0" prefWidth="265.0" />
+                                             </children>
+                                          </HBox>
+                                          <TextFlow fx:id="single_series_summary" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="490.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </TextFlow>
+                                          <HBox fx:id="series_seasons_hbox" layoutX="10.0" layoutY="177.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #cccccc;">
+                                             <children>
+                                                <Label text="Sezony:">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox layoutX="10.0" layoutY="177.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #cccccc;">
+                                             <children>
+                                                <Label text="Obsada:">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <Pane prefHeight="200.0" prefWidth="265.0" />
+                                                <Button mnemonicParsing="false" style="-fx-background-color: #ffffff;" text="Dodaj">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="100.0" right="5.0" top="5.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

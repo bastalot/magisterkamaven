@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane id="id" fx:id="listElement" onMouseClicked="#listElementClicked" prefHeight="50.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListElementController">
+<Pane id="id" fx:id="listElement" onMouseClicked="#listElementClicked" prefHeight="50.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListMovieElementController">
    <children>
       <Label fx:id="title" layoutX="20.0" layoutY="8.0" prefHeight="17.0" prefWidth="550.0" text="Movie title or sth" AnchorPane.leftAnchor="20.0">
          <font>

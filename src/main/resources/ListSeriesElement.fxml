@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane id="id" fx:id="listElement" onMouseClicked="#listElementClicked" prefHeight="50.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListSeriesElementController">
+   <children>
+      <Label fx:id="title" layoutX="20.0" layoutY="8.0" prefHeight="17.0" prefWidth="490.0" text="Series title or sth" AnchorPane.leftAnchor="20.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <padding>
+            <Insets top="5.0" />
+         </padding></Label>
+      <Label fx:id="year" layoutX="506.0" layoutY="9.0" prefHeight="17.0" prefWidth="120.0" text="(2000 - 2000)" AnchorPane.rightAnchor="14.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <padding>
+            <Insets top="5.0" />
+         </padding></Label>
+   </children>
+</Pane>

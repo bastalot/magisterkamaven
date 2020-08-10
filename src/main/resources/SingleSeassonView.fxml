@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SingleSeassonController">
+   <children>
+      <HBox>
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="seassons_series_poster" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@nopicture.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="seassons_edit_button" alignment="CENTER" mnemonicParsing="false" onAction="#editSeasson" style="-fx-background-color: #ffffff;" text="Edytuj sezon" />
+                  <Button fx:id="seassons_back_button" mnemonicParsing="false" onAction="#backToMenu" style="-fx-background-color: #ffffff;" text="POWRÓT DO SERIALU">
+                     <padding>
+                        <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets top="85.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="481.0" prefWidth="515.0">
+               <children>
+                  <Label fx:id="seassons_series_title" alignment="TOP_LEFT" prefHeight="70.0" prefWidth="500.0" text="Nazwa serialu raz dwa trzy bardzo dlugi tytul ale to baaardzo dlugi tytul taki dlugi ze sie nie miesci" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="seassons_series_start_year" text="Lata: XXXX">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="seassons_series_end_year" layoutX="15.0" layoutY="100.0" text="Lata: XXXX">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="seassons_number_label" layoutX="10.0" layoutY="65.0" text="Sezon 1">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Pane prefHeight="200.0" prefWidth="265.0">
+                     <children>
+                        <Label layoutY="14.0" prefHeight="27.0" prefWidth="515.0" style="-fx-background-color: #cccccc;" text="Podsumowanie:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextFlow fx:id="seassons_summary_textflow" layoutY="41.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="515.0" style="-fx-background-color: #dddddd;" />
+                        <Label layoutY="141.0" prefHeight="27.0" prefWidth="515.0" style="-fx-background-color: #cccccc;" text="Lista odcinków">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ListView fx:id="seassons_episode_listview" disable="true" layoutY="168.0" prefHeight="164.0" prefWidth="515.0" />
+                     </children>
+                  </Pane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
