@@ -1,7 +1,8 @@
 package controller;
 
-import com.sun.deploy.net.protocol.ProtocolType;
-import com.sun.security.ntlm.Client;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.runtime.Context;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -25,27 +25,22 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Base64;
-import java.util.Optional;
+import java.util.*;
 
 public class EditSingleMovieController {
 
     public Button edit_movie_delete_button;
+    public TextField edit_movie_genres;
     private String id;
     private String title = "";
     private String summary = "";
     private String release_date = "";
     private String runtime = "";
+    private String initialgenres = "";
+    private String genres = "";
     private byte[] bytes = null;
     private Image poster;
-
-    public String getLastView() {
-        return lastView;
-    }
-
-    public void setLastView(String lastView) {
-        this.lastView = lastView;
-    }
+    private JsonObject id_movie;
 
     private String lastView;
 
@@ -54,56 +49,30 @@ public class EditSingleMovieController {
 
     @FXML
     private Button edit_movie_poster_button;
-
     @FXML
     private Button edit_movie_back_button;
-
     @FXML
     private TextField edit_movie_title;
-
     @FXML
     private Label movieError;
-
     @FXML
     private TextField edit_movie_release_date;
-
     @FXML
     private TextField edit_movie_runtime;
-
     @FXML
     private TextArea edit_movie_summary;
-
     @FXML
     private Button save_edit_movie_button;
-
     @FXML
     private Label label_added_movie;
 
-    @FXML
-    void backToSingleMovieView(ActionEvent event) {
-        try {
 
+    public String getLastView() {
+        return lastView;
+    }
 
-            URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader(url);
-            Parent parent = fxmlLoader.load();
-
-            SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.getMovieData(id);
-            singleMovieController.getLastView(lastView);
-
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-
-
-
-            stage.show();
-
-
-        } catch(Exception e) {
-            System.out.println(e + " handlePicClicked method HomeController");
-        }
+    public void setLastView(String lastView) {
+        this.lastView = lastView;
     }
 
     @FXML
@@ -155,6 +124,33 @@ public class EditSingleMovieController {
     }
 
     @FXML
+    void backToSingleMovieView(ActionEvent event) {
+        try {
+
+
+            URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            Parent parent = fxmlLoader.load();
+
+            SingleMovieController singleMovieController = fxmlLoader.getController();
+            singleMovieController.getMovieData(id);
+            singleMovieController.setLastView(lastView);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+
+
+
+            stage.show();
+
+
+        } catch(Exception e) {
+            System.out.println(e + " handlePicClicked method HomeController");
+        }
+    }
+
+    @FXML
     void setMovieData(ActionEvent event) throws IOException {
 
         System.out.println("save edit button clicked");
@@ -169,6 +165,7 @@ public class EditSingleMovieController {
         summary = edit_movie_summary.getText();
         release_date = edit_movie_release_date.getText();
         runtime = edit_movie_runtime.getText();
+        genres = edit_movie_genres.getText();
 
         URL url = new URL("http://localhost:8080/movie/" + id);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -201,13 +198,17 @@ public class EditSingleMovieController {
             //jsonObject.put("poster", Base64.getEncoder().encodeToString());
         }
 
+
+        if (genres.length()>1) {
+            manageGenres();
+        }
+
         StringWriter out = new StringWriter();
         jsonObject.writeJSONString(out);
         String jsonText = out.toString();
 
 
         try(OutputStream os = con.getOutputStream()) {
-            //byte[] input = jsonText.getBytes("utf-8");
             byte[] input = jsonObject.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
 
@@ -224,12 +225,258 @@ public class EditSingleMovieController {
             }
             System.out.println(response.toString());
         }
-
         label_added_movie.setText("Edycja pomyślna");
+    }
+
+    public void manageGenres() throws IOException {
+
+
+        while (Objects.equals(genres.charAt(genres.length()-1), ' ') || Objects.equals(genres.charAt(genres.length()-1), ',')) {
+            genres = genres.substring(0, genres.length() - 1);
+        }
+
+        String partsInitial[] = initialgenres.split(",");
+        String parts[] = genres.split(",");
+        String finalGenres = "";
+        Set<String> partsSet = new HashSet<>();
+
+        if (!initialgenres.equals(genres)) {
+
+            for (int i = 0; i < parts.length; i++) {
+
+                while (Objects.equals(parts[i].charAt(0), ' ')) {
+                    parts[i] = parts[i].substring(1);
+                }
+
+                partsSet.add(parts[i]);
+                Boolean isInMoviesGenres = false;
+
+                JsonArray movieGenresArray = getAllMovieGenres();
+                for (int j = 0; j < movieGenresArray.size(); j++) {
+                    JsonObject movieGenres = movieGenresArray.get(j).getAsJsonObject();
+                    JsonObject id_movie = movieGenres.get("id_movie").getAsJsonObject();
+                    JsonObject id_genre = movieGenres.get("id_genre").getAsJsonObject();
+
+                    if (id_movie.get("id_movie").getAsString().equals(id) && id_genre.get("genre_name").getAsString().equals(parts[i])) {
+                        isInMoviesGenres = true;
+                        break;
+                    }
+                }
+                if (!isInMoviesGenres) {
+                    finalGenres += parts[i] + ", ";
+                }
+            }
+
+
+            for (int i = 0; i < partsInitial.length; i++) {
+                if (partsInitial[i].length() > 1) {
+                    while (Objects.equals(partsInitial[i].charAt(0), ' ')) {
+                        partsInitial[i] = partsInitial[i].substring(1);
+                    }
+                }
+
+
+                JsonArray movieGenresArray = getAllMovieGenres();
+                if (!partsSet.contains(partsInitial[i])) {
+
+                        for (int j = 0; j < movieGenresArray.size(); j++) {
+                            JsonObject movieGenres = movieGenresArray.get(j).getAsJsonObject();
+                            JsonObject id_movie = movieGenres.get("id_movie").getAsJsonObject();
+                            JsonObject id_genre = movieGenres.get("id_genre").getAsJsonObject();
+
+                            if (id_movie.get("id_movie").getAsString().equals(id) && id_genre.get("genre_name").getAsString().equals(partsInitial[i])) {
+
+                                URL url = new URL("http://localhost:8080/moviegenres/" + movieGenres.get("id_moviegenres"));
+                                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                                con.setDoInput(true);
+                                con.setInstanceFollowRedirects(false);
+                                con.setRequestMethod("DELETE");
+                                con.setRequestProperty("Content_Type", "application/x-www-form-urlencoded");
+                                con.setRequestProperty("charset", "utf-8");
+                                con.setUseCaches(false);
+
+                                System.out.println("response: " + con.getResponseMessage());
+                                con.disconnect();
+                            }
+                        }
+                    }
+
+            }
+        }
+        System.out.println("finalgenres " + finalGenres);
+        if (finalGenres.length() > 1) {
+            saveGenres(finalGenres);
+        }
+    }
+
+    public void saveGenres(String genres) throws IOException {
+
+        genres = genres.trim();
+
+        /*while (genres.charAt((genres.length() - 1)) == ' ' || genres.charAt((genres.length() - 1)) == ',') {
+            genres = genres.substring(0, genres.length() - 1);
+        }*/
+
+        System.out.println(genres.length());
+
+        while (Objects.equals(genres.charAt(genres.length()-1), ' ') || Objects.equals(genres.charAt(genres.length()-1), ',')) {
+            genres = genres.substring(0, genres.length()-1);
+        }
+
+        String parts[] = genres.split(",");
+        Map<String, JsonObject> currentGenres = new HashMap<>();
+        currentGenres = getAllGenres();
+
+        for (int i = 0; i < parts.length; i++) {
+
+            URL url = new URL("http://localhost:8080/genre");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            if (parts.length>1) {
+                while (Objects.equals(parts[i].charAt(0), ' ')){
+                    parts[i] = parts[i].substring(1);
+                }
+            }
+
+            Boolean hasSameGenre = false;
+            JsonObject id_genre = null;
+
+            for (Map.Entry<String, JsonObject> entry : currentGenres.entrySet()) {
+                if (parts[i].toLowerCase().equals(entry.getKey().toLowerCase())) {
+                    id_genre = entry.getValue();
+                    hasSameGenre = true;
+                    break;
+                }
+            }
+
+            if (!hasSameGenre) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("genre_name", parts[i]);
+
+                try (OutputStream os = con.getOutputStream()) {
+                    byte[] input = jsonObject.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                    Reader reader = new StringReader(response.toString());
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonResponse = (JsonObject) jsonParser.parse(reader);
+                    System.out.println("id dodanego gatunku to " + jsonResponse.get("id_genre").toString());
+                    id_genre = jsonResponse;
+                }
+
+                URL url1 = new URL("http://localhost:8080/moviegenres/");
+                HttpURLConnection con1 = (HttpURLConnection) url1.openConnection();
+                con1.setRequestMethod("POST");
+                con1.setRequestProperty("Content-Type", "application/json; utf-8");
+                con1.setRequestProperty("Accept", "application/json");
+                con1.setDoOutput(true);
+
+                JSONObject movieGenresJsonObj = new JSONObject();
+                movieGenresJsonObj.put("id_genre", id_genre);
+                movieGenresJsonObj.put("id_movie", id_movie);
+
+                try (OutputStream os = con1.getOutputStream()) {
+                    byte[] input = movieGenresJsonObj.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con1.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                }
+                con1.disconnect();
+
+            } else {
+
+                URL url1 = new URL("http://localhost:8080/moviegenres/");
+                HttpURLConnection con1 = (HttpURLConnection) url1.openConnection();
+                con1.setRequestMethod("POST");
+                con1.setRequestProperty("Content-Type", "application/json; utf-8");
+                con1.setRequestProperty("Accept", "application/json");
+                con1.setDoOutput(true);
+
+                JSONObject movieGenresJsonObj = new JSONObject();
+                movieGenresJsonObj.put("id_genre", id_genre);
+                movieGenresJsonObj.put("id_movie", id_movie);
+
+                try (OutputStream os = con1.getOutputStream()) {
+                    byte[] input = movieGenresJsonObj.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                System.out.println();
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con1.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                }
+                con1.disconnect();
+            }
+            con.disconnect();
+            System.out.println("\"" + parts[i] + "\"");
+        }
 
     }
 
-    public void loadInitialData(String id, String title, String release_date, String runtime, String summary, Image poster) {
+    public Map<String, JsonObject> getAllGenres() throws IOException {
+
+        Map<String, JsonObject> genres = new HashMap<>();
+
+        String link = "http://localhost:8080/genre/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        JsonArray genresJsonArray = (JsonArray) jsonParser.parse(reader);
+
+        System.out.println(genresJsonArray);
+
+        for (int i = 0; i < genresJsonArray.size(); i++) {
+            JsonObject genreObj = genresJsonArray.get(i).getAsJsonObject();
+            genres.put(genreObj.get("genre_name").getAsString(), genreObj);
+        }
+
+        return genres;
+    }
+
+    public JsonArray getAllMovieGenres() throws IOException{
+        JsonArray movieGenres = new JsonArray();
+
+        String link = "http://localhost:8080/moviegenres/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        movieGenres = (JsonArray) jsonParser.parse(reader);
+
+
+        return movieGenres;
+    }
+
+    public void loadInitialData(String id, String title, String release_date, String runtime, String summary, Image poster, String genres) {
         this.id = id;
         if (title != null)
         this.title = title;
@@ -241,12 +488,34 @@ public class EditSingleMovieController {
         this.summary = summary;
         if (poster != null)
         this.poster = poster;
+        if (genres != null)
+        this.initialgenres = genres;
+
+
 
         edit_movie_title.setText(title);
         edit_movie_release_date.setText(release_date);
         edit_movie_runtime.setText(runtime);
         edit_movie_summary.setText(summary);
         edit_movie_poster.setImage(poster);
+        edit_movie_genres.setText(genres);
+        try {
+            String link = "http://localhost:8080/movie/" + id;
+            HttpURLConnection httpURLConnection;
+            StringBuilder stringBuilder = new StringBuilder();
+            URL url = new URL(link);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+
+            Reader reader = new InputStreamReader(inputStream, "utf-8");
+            JsonParser jsonParser= new JsonParser();
+            id_movie = (JsonObject) jsonParser.parse(reader);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void deleteMovie(ActionEvent actionEvent) throws IOException {
@@ -273,13 +542,6 @@ public class EditSingleMovieController {
 
             System.out.println("response: " + httpCon.getResponseMessage());
             httpCon.disconnect();
-            /*
-            URL url = new URL("http://localhost:8080/movie/" + id);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setDoOutput(true);
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            con.setRequestMethod("DELETE");
-            con.connect(); */
 
             URL url1 = ClassLoader.getSystemResource("MainView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url1);
@@ -301,4 +563,5 @@ public class EditSingleMovieController {
 
 
     }
+
 }

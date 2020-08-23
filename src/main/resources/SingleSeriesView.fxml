@@ -21,7 +21,7 @@
                      </image>
                   </ImageView>
                   <Button fx:id="single_series_edit_button" alignment="CENTER" mnemonicParsing="false" onAction="#editSeries" style="-fx-background-color: #ffffff;" text="Edytuj serial" />
-                  <Label alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="200.0" text="Gatunki: ">
+                  <Label fx:id="tvseries_genres_label" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="200.0" text="Gatunki: ">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>

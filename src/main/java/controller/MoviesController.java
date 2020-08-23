@@ -31,8 +31,6 @@ public class MoviesController implements Initializable {
     public ListView<Pane> movies_list_view;
 
 
-
-
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("MoviesController working");
 
@@ -58,7 +56,6 @@ public class MoviesController implements Initializable {
             int i=0;
 
             for (Map.Entry<Integer, String> entry: sortedByTitle.entrySet()) {
-                //System.out.println(entry.getKey() + " / " + entry.getValue());
                 i++;
 
                 URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
@@ -79,44 +76,16 @@ public class MoviesController implements Initializable {
                 listMovieElementController.setDbId(listMovieElementController1.getDbId());
                 listMovieElementController.setValues();
 
-                //movies_view_main_box.getChildren().add(pane);\
                 movies_list_view.getItems().add(pane);
                 entries.add(pane);
-                //System.out.println(entries.);
-
             }
 
-
-/*
-           for (Map.Entry<Integer, ListElementController> entry : allMovies.entrySet()) {
-               //System.out.println(entry.getKey() + " / " + entry.getValue().getTitleString());
-
-               URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
-               FXMLLoader fxmlLoader = new FXMLLoader(url);
-               Pane pane = (Pane) fxmlLoader.load();
-
-               ListElementController listElementController = fxmlLoader.getController();
-               //listElementController = new ListElementController(entry.getKey().toString(), entry.getValue().getTitleString(), entry.getValue().getYearString(), entry.getValue().getDbId());
-               if (entry.getKey() % 2 == 1){
-                   listElementController.listElement.setStyle("-fx-background-color: #ffffff");
-               }
-
-               listElementController.setId(entry.getKey().toString());
-               listElementController.setTitleString(entry.getValue().getTitleString());
-               listElementController.setYearString(entry.getValue().getYearString());;
-               listElementController.setDbId(entry.getValue().getDbId());
-               listElementController.setValues();
-
-
-               //movies_view_main_box.getChildren().add(pane);
-           } */
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -199,7 +168,6 @@ public class MoviesController implements Initializable {
 
     }
 
-
     public void searchMovie(ActionEvent actionEvent) {
 
         System.out.println(movies_search.textProperty().getValue());
@@ -273,8 +241,6 @@ public class MoviesController implements Initializable {
         }
 
     }
-
-
 
     public Map<Integer, ListMovieElementController> getAllMovies() throws IOException, ParseException {
 
@@ -358,7 +324,6 @@ public class MoviesController implements Initializable {
         } return sortedMap;
 
     }
-
 
 
 }

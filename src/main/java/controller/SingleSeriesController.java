@@ -40,6 +40,7 @@ import java.util.Map;
 
 public class SingleSeriesController {
 
+    public Label tvseries_genres_label;
     URL url;
     String id;
     Image poster;
@@ -72,10 +73,17 @@ public class SingleSeriesController {
             String summary = stringBuilder.toString();
 
 
+            String genres = tvseries_genres_label.getText();
+            String parts[] = genres.split(":");
+            if (parts.length>1) {
+                genres = parts[1];
+            } else genres = null;
+
+
             EditSingleSeriesController editSingleSeriesController = fxmlLoader.getController();
             editSingleSeriesController.loadInitialData(id, single_series_title.getText(),
                     single_series_start_year.getText(), single_series_end_year.getText(),
-                    summary, poster);
+                    summary, poster, genres);
             editSingleSeriesController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
@@ -141,23 +149,23 @@ public class SingleSeriesController {
 
         if (jsonObject.get("title").toString() != "null") {
             single_series_title.setText(jsonObject.getString("title"));
-        } else single_series_title.setText("Nie znaleziono tytulu");
+        } else single_series_title.setText("Brak");
 
         if (jsonObject.get("summary").toString() != "null") {
             Text text = new Text(jsonObject.getString("summary"));
             single_series_summary.getChildren().add(text);
         } else {
-            Text text = new Text("Brak opisu serialu.");
+            Text text = new Text("Brak");
             single_series_summary.getChildren().add(text);
         }
 
         if (jsonObject.get("start_year").toString() != "null") {
             single_series_start_year.setText("Rok rozpoczęcia: " + jsonObject.get("start_year").toString());
-        } else single_series_start_year.setText("Brak informacji o roku poczatkowym");
+        } else single_series_start_year.setText("Brak");
 
         if (jsonObject.get("end_year").toString() != "null") {
             single_series_end_year.setText("Rok zakończenia: " + jsonObject.get("end_year").toString());
-        } else single_series_end_year.setText("Brak informacji o roku końcowym");
+        } else single_series_end_year.setText("Brak");
 
 
         System.out.println(jsonObject.get("poster").toString());
@@ -198,7 +206,6 @@ public class SingleSeriesController {
         HashMap<Integer, Integer> seassonNumberId = new HashMap<>();
 
         System.out.println("po arrayliscie ");
-        //System.out.println(allSeasons.get(1).toString());
 
         for (int i = 0; i < allSeasons.size(); i++) {
 
@@ -210,24 +217,6 @@ public class SingleSeriesController {
             System.out.println(seassonNumberId.get(seassonNumber));
         }
 
-        /*
-        while (allSeasons.iterator().hasNext()) {
-            JsonObject tvSeasson = allSeasons.iterator().next();
-            Integer id_tvseasson = tvSeasson.get("id_tvseassons").getAsInt();
-            Integer seassonNumber = tvSeasson.get("seasson_number").getAsInt();
-
-            seassonNumberId.put(seassonNumber, id_tvseasson);
-            System.out.println(seassonNumberId.get(seassonNumber));
-        }*/
-
-
-       /* for (int i = 1; i <= seassonNumberId.size(); i++) {
-
-            //Integer seasonNumberInt = i+1;
-            System.out.println(seassonNumberId.containsKey(i) + " drugi for");
-
-
-        } */
 
         for (Map.Entry<Integer, Integer> entry :
                 seassonNumberId.entrySet()) {
@@ -235,7 +224,6 @@ public class SingleSeriesController {
             System.out.println(entry.getKey() + " / " + entry.getValue());
             Hyperlink seasonNumber = new Hyperlink();
 
-            //Label seasonNumber = new Label();
             seasonNumber.setText(entry.getKey().toString());
             seasonNumber.setPrefHeight(27);
             seasonNumber.setPrefWidth(20);
@@ -243,8 +231,7 @@ public class SingleSeriesController {
             Insets padding = new Insets(5,5,5,5);
             seasonNumber.setPadding(padding);
             seasonNumber.setId(entry.getValue().toString());
-            //seasonNumber.set
-            //seasonNumber.setStyle("-fx-background-color: blue;");
+
             seasonNumber.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -272,6 +259,8 @@ public class SingleSeriesController {
             series_seasons_hbox.getChildren().add(seasonNumber);
 
         }
+
+        tvseries_genres_label.setText(getSeriesGenres(id));
 
 
     }
@@ -304,5 +293,40 @@ public class SingleSeriesController {
 
     }
 
+    public ArrayList<String> getAllGenres() {
+
+        ArrayList<String> genres = new ArrayList<>();
+
+        String link = "http://localhost:8080/tvseriesgenres/all";
+
+
+
+        return genres;
+
+    }
+
+    public String getSeriesGenres(String id) throws IOException {
+
+        String genres = "Gatunki: ";
+
+        String link = "http://localhost:8080/tvseriesgenres/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        JsonArray genresJsonArray = (JsonArray) jsonParser.parse(reader);
+
+        for (int i = 0; i < genresJsonArray.size(); i++) {
+            JsonObject seriesGenreObj = genresJsonArray.get(i).getAsJsonObject();
+            JsonObject seriesObj = seriesGenreObj.getAsJsonObject("id_tvseries");
+            JsonObject genreObj = seriesGenreObj.getAsJsonObject("id_genre");
+
+            if (seriesObj.get("id_tvseries").getAsString().equals(id)) {
+                genres += genreObj.get("genre_name").getAsString() + ", ";
+            }
+        }
+
+        return genres;
+    }
 
 }

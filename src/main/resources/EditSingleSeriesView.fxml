@@ -41,7 +41,7 @@
                      <children>
                         <Label text="Nazwa serialu:">
                            <HBox.margin>
-                              <Insets left="10.0" right="10.0" />
+                              <Insets left="10.0" right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
                         <TextField id="seriestitle" fx:id="edit_series_title" text="Nazwa serialu">
@@ -63,7 +63,7 @@
                      <children>
                         <Label text="Rok rozpoczęcia: ">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
                         <TextField id="seriesstartyear" fx:id="edit_series_start_year" text="XXXX">
@@ -80,10 +80,10 @@
                      <children>
                         <Label text="Rok zakończenia: ">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField id="seriesendyear" fx:id="edit_series_end_year" text="XXXX"/>
+                        <TextField id="seriesendyear" fx:id="edit_series_end_year" text="XXXX" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -91,6 +91,23 @@
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="20.0" layoutY="70.0">
+                     <children>
+                        <Label text="Gatunki:">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="seriesgenres" fx:id="edit_series_genres">
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </HBox>
                   <Label text="Opis serialu:">
                      <VBox.margin>

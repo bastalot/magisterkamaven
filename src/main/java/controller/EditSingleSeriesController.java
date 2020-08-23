@@ -32,6 +32,7 @@ public class EditSingleSeriesController {
     public TextField edit_series_title;
     public TextField edit_series_start_year;
     public TextField edit_series_end_year;
+    public TextField edit_series_genres;
     public TextArea edit_series_summary;
     public Button edit_series_poster_button;
     public Button edit_series_delete_button;
@@ -48,6 +49,10 @@ public class EditSingleSeriesController {
     private byte[] bytes = null;
     private Image poster;
     private String lastView;
+    private String initialgenres = "";
+    private String genres = "";
+    private JsonObject id_tvseries;
+
 
     public String getLastView() {
         return lastView;
@@ -56,7 +61,6 @@ public class EditSingleSeriesController {
     public void setLastView(String lastView) {
         this.lastView = lastView;
     }
-
 
     public void getNewPosterFromFile(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -105,52 +109,6 @@ public class EditSingleSeriesController {
         }
     }
 
-    public void deleteSeries(ActionEvent actionEvent) throws IOException {
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Potwierdzenie usunięcia serialu " + title);
-        alert.setHeaderText(null);
-        alert.setContentText("Czy na pewno chcesz całkowicie usunąć serial " + title + "?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-
-            System.out.println(id);
-
-            URL url = new URL("http://localhost:8080/tvseries/" + id);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            httpCon.setDoInput(true);
-            httpCon.setInstanceFollowRedirects(false);
-            httpCon.setRequestMethod("DELETE");
-            httpCon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            httpCon.setRequestProperty("charset", "utf-8");
-            httpCon.setUseCaches(false);
-
-
-            System.out.println("response: " + httpCon.getResponseMessage());
-            httpCon.disconnect();
-
-            URL url1 = ClassLoader.getSystemResource("MainView.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader(url1);
-            Parent parent = fxmlLoader.load();
-            ViewController viewController = fxmlLoader.getController();
-
-            URL url2 = ClassLoader.getSystemResource(lastView);
-            AnchorPane view = (AnchorPane) FXMLLoader.load(url2);
-            viewController.mainPane.setCenter(view);
-
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-
-        } else {
-
-        }
-
-
-    }
-
     public void backToSingleSeriesView(ActionEvent actionEvent) {
         try {
 
@@ -186,6 +144,7 @@ public class EditSingleSeriesController {
         summary = edit_series_summary.getText();
         start_year = edit_series_start_year.getText();
         end_year = edit_series_end_year.getText();
+        genres = edit_series_genres.getText();
 
         URL url = new URL("http://localhost:8080/tvseries/" + id);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -222,6 +181,10 @@ public class EditSingleSeriesController {
         if(summary.length()>1)
             jsonObject.put("summary", summary);
         else jsonObject.put("summary", null);
+
+        if (genres.length()>1) {
+            manageGenres();
+        }
 
         StringWriter out = new StringWriter();
         jsonObject.writeJSONString(out);
@@ -303,7 +266,255 @@ public class EditSingleSeriesController {
         label_added_series.setText("Edycja pomyślna");
     }
 
-    public void loadInitialData(String id, String title, String start_year, String end_year, String summary, Image poster) {
+    public void manageGenres() throws IOException {
+
+        while (Objects.equals(genres.charAt(genres.length()-1), ' ') || Objects.equals(genres.charAt(genres.length()-1), ',')) {
+            genres = genres.substring(0, genres.length() - 1);
+        }
+
+        String partsInitial[] = initialgenres.split(",");
+        String parts[] = genres.split(",");
+        String finalGenres = "";
+        Set<String> partsSet = new HashSet<>();
+
+        if (!initialgenres.equals(genres)) {
+
+            for (int i = 0; i < parts.length; i++) {
+
+                while (Objects.equals(parts[i].charAt(0), ' ')) {
+                    parts[i] = parts[i].substring(1);
+                }
+
+                partsSet.add(parts[i]);
+                Boolean isInTVSeriesGenres = false;
+
+                JsonArray tvSeriesGenresArray = getAllTVSeriesGenres();
+                for (int j = 0; j < tvSeriesGenresArray.size(); j++) {
+                    JsonObject tvSeriesGenres = tvSeriesGenresArray.get(j).getAsJsonObject();
+                    JsonObject id_tvseries = tvSeriesGenres.get("id_tvseries").getAsJsonObject();
+                    JsonObject id_genre = tvSeriesGenres.get("id_genre").getAsJsonObject();
+
+                    if (id_tvseries.get("id_tvseries").getAsString().equals(id) && id_genre.get("genre_name").getAsString().equals(parts[i])) {
+                        isInTVSeriesGenres = true;
+                        break;
+                    }
+                }
+                if (!isInTVSeriesGenres) {
+                    finalGenres += parts[i] + ", ";
+                }
+            }
+
+
+            for (int i = 0; i < partsInitial.length; i++) {
+                if (partsInitial[i].length() > 1) {
+                    while (Objects.equals(partsInitial[i].charAt(0), ' ')) {
+                        partsInitial[i] = partsInitial[i].substring(1);
+                    }
+                }
+
+
+                JsonArray tvSeriesGenresArray = getAllTVSeriesGenres();
+                if (!partsSet.contains(partsInitial[i])) {
+
+                    for (int j = 0; j < tvSeriesGenresArray.size(); j++) {
+                        JsonObject tvSeriesGenres = tvSeriesGenresArray.get(j).getAsJsonObject();
+                        JsonObject id_tvseries = tvSeriesGenres.get("id_tvseries").getAsJsonObject();
+                        JsonObject id_genre = tvSeriesGenres.get("id_genre").getAsJsonObject();
+
+                        if (id_tvseries.get("id_tvseries").getAsString().equals(id) && id_genre.get("genre_name").getAsString().equals(partsInitial[i])) {
+
+                            URL url = new URL("http://localhost:8080/tvseriesgenres/" + tvSeriesGenres.get("id_tvseriesgenres"));
+                            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                            con.setDoInput(true);
+                            con.setInstanceFollowRedirects(false);
+                            con.setRequestMethod("DELETE");
+                            con.setRequestProperty("Content_Type", "application/x-www-form-urlencoded");
+                            con.setRequestProperty("charset", "utf-8");
+                            con.setUseCaches(false);
+
+                            System.out.println("response: " + con.getResponseMessage());
+                            con.disconnect();
+                        }
+                    }
+                }
+
+            }
+        }
+        System.out.println("finalgenres " + finalGenres);
+        if (finalGenres.length() > 1) {
+            saveGenres(finalGenres);
+        }
+
+    }
+
+    public void saveGenres(String genres) throws IOException {
+
+        genres = genres.trim();
+
+        /*while (genres.charAt((genres.length() - 1)) == ' ' || genres.charAt((genres.length() - 1)) == ',') {
+            genres = genres.substring(0, genres.length() - 1);
+        }*/
+
+        System.out.println(genres.length());
+
+        while (Objects.equals(genres.charAt(genres.length()-1), ' ') || Objects.equals(genres.charAt(genres.length()-1), ',')) {
+            genres = genres.substring(0, genres.length()-1);
+        }
+
+        String parts[] = genres.split(",");
+        Map<String, JsonObject> currentGenres = new HashMap<>();
+        currentGenres = getAllGenres();
+
+        for (int i = 0; i < parts.length; i++) {
+
+            URL url = new URL("http://localhost:8080/genre");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            if (parts.length>1) {
+                while (Objects.equals(parts[i].charAt(0), ' ')){
+                    parts[i] = parts[i].substring(1);
+                }
+            }
+
+            Boolean hasSameGenre = false;
+            JsonObject id_genre = null;
+
+            for (Map.Entry<String, JsonObject> entry : currentGenres.entrySet()) {
+                if (parts[i].toLowerCase().equals(entry.getKey().toLowerCase())) {
+                    id_genre = entry.getValue();
+                    hasSameGenre = true;
+                    break;
+                }
+            }
+
+            if (!hasSameGenre) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("genre_name", parts[i]);
+
+                try (OutputStream os = con.getOutputStream()) {
+                    byte[] input = jsonObject.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                    Reader reader = new StringReader(response.toString());
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonResponse = (JsonObject) jsonParser.parse(reader);
+                    System.out.println("id dodanego gatunku to " + jsonResponse.get("id_genre").toString());
+                    id_genre = jsonResponse;
+                }
+
+                URL url1 = new URL("http://localhost:8080/moviegenres/");
+                HttpURLConnection con1 = (HttpURLConnection) url1.openConnection();
+                con1.setRequestMethod("POST");
+                con1.setRequestProperty("Content-Type", "application/json; utf-8");
+                con1.setRequestProperty("Accept", "application/json");
+                con1.setDoOutput(true);
+
+                JSONObject tvSeriesGenresJsonObj = new JSONObject();
+                tvSeriesGenresJsonObj.put("id_genre", id_genre);
+                tvSeriesGenresJsonObj.put("id_tvseries", id_tvseries);
+
+                try (OutputStream os = con1.getOutputStream()) {
+                    byte[] input = tvSeriesGenresJsonObj.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con1.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                }
+                con1.disconnect();
+
+            } else {
+
+                URL url1 = new URL("http://localhost:8080/tvseriesgenres/");
+                HttpURLConnection con1 = (HttpURLConnection) url1.openConnection();
+                con1.setRequestMethod("POST");
+                con1.setRequestProperty("Content-Type", "application/json; utf-8");
+                con1.setRequestProperty("Accept", "application/json");
+                con1.setDoOutput(true);
+
+                JSONObject tvSeriesGenresJsonObj = new JSONObject();
+                tvSeriesGenresJsonObj.put("id_genre", id_genre);
+                tvSeriesGenresJsonObj.put("id_tvseries", id_tvseries);
+
+                try (OutputStream os = con1.getOutputStream()) {
+                    byte[] input = tvSeriesGenresJsonObj.toString().getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                System.out.println();
+
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(con1.getInputStream(), "utf-8"))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    System.out.println(response.toString());
+                }
+                con1.disconnect();
+            }
+            con.disconnect();
+            System.out.println("\"" + parts[i] + "\"");
+        }
+
+    }
+
+    public Map<String, JsonObject> getAllGenres() throws IOException {
+
+        Map<String, JsonObject> genres = new HashMap<>();
+
+        String link = "http://localhost:8080/genre/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        JsonArray genresJsonArray = (JsonArray) jsonParser.parse(reader);
+
+        System.out.println(genresJsonArray);
+
+        for (int i = 0; i < genresJsonArray.size(); i++) {
+            JsonObject genreObj = genresJsonArray.get(i).getAsJsonObject();
+            genres.put(genreObj.get("genre_name").getAsString(), genreObj);
+        }
+
+        return genres;
+    }
+
+    public JsonArray getAllTVSeriesGenres() throws IOException{
+        JsonArray tvSeriesGenres = new JsonArray();
+
+        String link = "http://localhost:8080/tvseriesgenres/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        tvSeriesGenres = (JsonArray) jsonParser.parse(reader);
+
+
+        return tvSeriesGenres;
+    }
+
+    public void loadInitialData(String id, String title, String start_year, String end_year, String summary, Image poster, String genres) {
         this.id = id;
         if (title != null)
             this.title = title;
@@ -315,14 +526,79 @@ public class EditSingleSeriesController {
             this.summary = summary;
         if (poster != null)
             this.poster = poster;
+        if (genres != null)
+            this.initialgenres = genres;
 
         edit_series_title.setText(title);
         edit_series_start_year.setText(start_year);
         edit_series_end_year.setText(end_year);
         edit_series_summary.setText(summary);
         edit_series_poster.setImage(poster);
+        edit_series_genres.setText(genres);
+
+        try {
+            String link = "http://localhost:8080/tvseries/" + id;
+            HttpURLConnection httpURLConnection;
+            StringBuilder stringBuilder = new StringBuilder();
+            URL url = new URL(link);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+
+            Reader reader = new InputStreamReader(inputStream, "utf-8");
+            JsonParser jsonParser= new JsonParser();
+            id_tvseries = (JsonObject) jsonParser.parse(reader);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    public void deleteSeries(ActionEvent actionEvent) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Potwierdzenie usunięcia serialu " + title);
+        alert.setHeaderText(null);
+        alert.setContentText("Czy na pewno chcesz całkowicie usunąć serial " + title + "?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+
+            System.out.println(id);
+
+            URL url = new URL("http://localhost:8080/tvseries/" + id);
+            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+            httpCon.setDoInput(true);
+            httpCon.setInstanceFollowRedirects(false);
+            httpCon.setRequestMethod("DELETE");
+            httpCon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            httpCon.setRequestProperty("charset", "utf-8");
+            httpCon.setUseCaches(false);
+
+
+            System.out.println("response: " + httpCon.getResponseMessage());
+            httpCon.disconnect();
+
+            URL url1 = ClassLoader.getSystemResource("MainView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url1);
+            Parent parent = fxmlLoader.load();
+            ViewController viewController = fxmlLoader.getController();
+
+            URL url2 = ClassLoader.getSystemResource(lastView);
+            AnchorPane view = (AnchorPane) FXMLLoader.load(url2);
+            viewController.mainPane.setCenter(view);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+        } else {
+
+        }
+
+
+    }
 
     public ArrayList<JsonObject> getAllSeassonsBySeriesId(Integer id_tvseries) throws IOException, ParseException {
 

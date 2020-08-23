@@ -1,5 +1,8 @@
 package controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,11 +29,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class SingleMovieController implements Initializable {
 
 
+    public Label movie_genres_label;
     URL url;
     String id;
     Image poster;
@@ -58,15 +64,9 @@ public class SingleMovieController implements Initializable {
     @FXML
     private TextFlow single_movie_summary;
 
-
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
     }
-
 
     public void backToMenu(ActionEvent actionEvent) {
 
@@ -101,8 +101,6 @@ public class SingleMovieController implements Initializable {
         HttpURLConnection httpURLConnection;
         StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(link);
-
-
         httpURLConnection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
 
@@ -170,6 +168,7 @@ public class SingleMovieController implements Initializable {
             poster = new Image(fileInputStream);
         }
 
+        movie_genres_label.setText(getMovieGenres(id));
 
     }
 
@@ -188,11 +187,17 @@ public class SingleMovieController implements Initializable {
             }
             String summary = stringBuilder.toString();
 
+            String genres = movie_genres_label.getText();
+            String parts[] = genres.split(":");
+            if (parts.length>1) {
+                genres = parts[1];
+            } else genres = null;
+
 
             EditSingleMovieController editSingleMovieController = fxmlLoader.getController();
             editSingleMovieController.loadInitialData(id, single_movie_title.getText(),
                     single_movie_release_date.getText(), single_movie_runtime.getText(),
-                    summary, poster);
+                    summary, poster, genres);
             editSingleMovieController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
@@ -206,7 +211,36 @@ public class SingleMovieController implements Initializable {
         }
     }
 
-    public void getLastView(String lastView) {
+    public void setLastView(String lastView) {
         this.lastView = lastView;
     }
+
+    public String getMovieGenres(String id) throws IOException {
+
+        String genres = "Gatunki: ";
+
+        String link = "http://localhost:8080/moviegenres/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        JsonArray genresJsonArray = (JsonArray) jsonParser.parse(reader);
+
+        for (int i = 0; i < genresJsonArray.size(); i++) {
+            JsonObject movieGenreObj = genresJsonArray.get(i).getAsJsonObject();
+            JsonObject movieObj = movieGenreObj.getAsJsonObject("id_movie");
+            JsonObject genreObj = movieGenreObj.getAsJsonObject("id_genre");
+
+            if (movieObj.get("id_movie").getAsString().equals(id)){
+                genres += genreObj.get("genre_name").getAsString() + ", ";
+            }
+
+        }
+
+
+        return genres;
+    }
+
+
+
 }

@@ -101,7 +101,7 @@ public class ListMovieElementController implements Initializable {
 
             SingleMovieController singleMovieController = fxmlLoader.getController();
             singleMovieController.getMovieData(dbId);
-            singleMovieController.getLastView("MoviesView.fxml");
+            singleMovieController.setLastView("MoviesView.fxml");
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();

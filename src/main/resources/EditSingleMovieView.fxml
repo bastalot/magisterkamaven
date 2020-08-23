@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditSingleMovieController">
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/1.8.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditSingleMovieController">
    <children>
       <HBox>
          <children>
@@ -41,7 +48,7 @@
                      <children>
                         <Label text="Nazwa filmu:">
                            <HBox.margin>
-                              <Insets left="10.0" right="10.0" />
+                              <Insets left="10.0" right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
                         <TextField id="movietitle" fx:id="edit_movie_title" text="Nazwa filmu" />
@@ -62,7 +69,7 @@
                      <children>
                         <Label text="Rok: ">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
                         <Pane prefWidth="41.0" />
@@ -76,7 +83,7 @@
                      <children>
                         <Label text="Czas trwania:">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets right="10.0" top="5.0" />
                            </HBox.margin>
                         </Label>
                         <TextField id="movietitle" fx:id="edit_movie_runtime" text="XXXXXX" />
@@ -84,6 +91,23 @@
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="20.0" layoutY="80.0">
+                     <children>
+                        <Label text="Gatunki:">
+                           <HBox.margin>
+                              <Insets right="10.0" top="5.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField id="moviegenres" fx:id="edit_movie_genres" text="XXXXXX">
+                           <HBox.margin>
+                              <Insets left="26.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
                   </HBox>
                   <Label text="Opis filmu:">
                      <VBox.margin>
