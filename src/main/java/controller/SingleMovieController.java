@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -37,6 +38,7 @@ public class SingleMovieController implements Initializable {
 
 
     public Label movie_genres_label;
+    public ListView<Label> movie_peoples_list;
     URL url;
     String id;
     Image poster;
@@ -45,22 +47,16 @@ public class SingleMovieController implements Initializable {
 
     @FXML
     private ImageView single_movie_poster;
-
     @FXML
     private Button single_movie_edit_button;
-
     @FXML
     private Label single_movie_title;
-
     @FXML
     private Button single_movie_back_button;
-
     @FXML
     private Label single_movie_release_date;
-
     @FXML
     private Label single_movie_runtime;
-
     @FXML
     private TextFlow single_movie_summary;
 
@@ -169,6 +165,7 @@ public class SingleMovieController implements Initializable {
         }
 
         movie_genres_label.setText(getMovieGenres(id));
+        getMoviePeople();
 
     }
 
@@ -241,6 +238,51 @@ public class SingleMovieController implements Initializable {
         return genres;
     }
 
+    public void getMoviePeople() throws IOException {
 
+        String link = "http://localhost:8080/moviepeople/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        JsonArray peopleJsonArray = (JsonArray) jsonParser.parse(reader);
 
+        for (int i = 0; i < peopleJsonArray.size(); i++) {
+            JsonObject moviePeopleObj = peopleJsonArray.get(i).getAsJsonObject();
+
+            JsonObject movieObj = moviePeopleObj.getAsJsonObject("id_movie");
+            JsonObject personObj = moviePeopleObj.getAsJsonObject("id_person");
+            String characterName = moviePeopleObj.get("character_name").getAsString();
+            String idMoviePeople = moviePeopleObj.get("id_moviepeople").getAsString();
+
+            if (movieObj.get("id_movie").getAsString().equals(id)) {
+                Label label = new Label();
+                label.setText(personObj.get("person_name").getAsString() + " jako " + characterName);
+                label.setId(idMoviePeople);
+                movie_peoples_list.getItems().add(label);
+            }
+        }
+    }
+
+    public void editCast(ActionEvent actionEvent) {
+
+        try{
+            url = ClassLoader.getSystemResource("EditMoviePeopleView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            Parent parent = fxmlLoader.load();
+
+            EditMoviePeopleController editMoviePeopleController = fxmlLoader.getController();
+            editMoviePeopleController.loadInitialData(id, single_movie_title.getText(), poster);
+            editMoviePeopleController.setLastView(lastView);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e){
+            System.out.println(e + " editcastbutton");
+        }
+
+    }
 }

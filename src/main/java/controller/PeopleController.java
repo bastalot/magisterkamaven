@@ -167,50 +167,50 @@ public class PeopleController implements Initializable {
             peoples_list_view.setItems(entries);
         }
 
-        Map<Integer, ListPersonElementController> allPeoples;
-        try {
-            allPeoples = getAllPersons();
-            System.out.println(allPeoples.size());
+            Map<Integer, ListPersonElementController> allPeoples;
+            try {
+                allPeoples = getAllPersons();
+                System.out.println(allPeoples.size());
 
-            HashMap<Integer, String> toBeSortedByName = new HashMap<>();
-            for (Map.Entry<Integer, ListPersonElementController> entry : allPeoples.entrySet()) {
-                toBeSortedByName.put(entry.getKey(), entry.getValue().nameString.toLowerCase());
-            }
-
-            LinkedHashMap<Integer, String> sortedByName = sortHashMapByValues(toBeSortedByName);
-
-            int i=0;
-
-            for (Map.Entry<Integer, String> entry: sortedByName.entrySet()) {
-                i++;
-
-                URL url = new File("src/main/resources/ListPersonElement.fxml").toURI().toURL();
-                FXMLLoader fxmlLoader = new FXMLLoader(url);
-                Pane pane = (Pane) fxmlLoader.load();
-
-                ListPersonElementController listPersonElementController = fxmlLoader.getController();
-                ListPersonElementController listPersonElementController1 = allPeoples.get(entry.getKey());
-
-                if (i % 2 == 1){
-                    listPersonElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                HashMap<Integer, String> toBeSortedByName = new HashMap<>();
+                for (Map.Entry<Integer, ListPersonElementController> entry : allPeoples.entrySet()) {
+                    toBeSortedByName.put(entry.getKey(), entry.getValue().nameString.toLowerCase());
                 }
 
-                listPersonElementController.setId(listPersonElementController1.getId());
-                listPersonElementController.setNameString(listPersonElementController1.getNameString());
-                listPersonElementController.setDbId(listPersonElementController1.getDbId());
-                listPersonElementController.setValues();
+                LinkedHashMap<Integer, String> sortedByName = sortHashMapByValues(toBeSortedByName);
 
-                searchGlobal = peoples_search.textProperty().getValue().toLowerCase();
+                int i = 0;
 
-                if (listPersonElementController.getNameString().toLowerCase().contains(peoples_search.textProperty().getValue().toLowerCase())) {
-                    peoples_list_view.getItems().add(pane);
+                for (Map.Entry<Integer, String> entry : sortedByName.entrySet()) {
+                    i++;
+
+                    URL url = new File("src/main/resources/ListPersonElement.fxml").toURI().toURL();
+                    FXMLLoader fxmlLoader = new FXMLLoader(url);
+                    Pane pane = (Pane) fxmlLoader.load();
+
+                    ListPersonElementController listPersonElementController = fxmlLoader.getController();
+                    ListPersonElementController listPersonElementController1 = allPeoples.get(entry.getKey());
+
+                    if (i % 2 == 1) {
+                        listPersonElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                    }
+
+                    listPersonElementController.setId(listPersonElementController1.getId());
+                    listPersonElementController.setNameString(listPersonElementController1.getNameString());
+                    listPersonElementController.setDbId(listPersonElementController1.getDbId());
+                    listPersonElementController.setValues();
+
+                    searchGlobal = peoples_search.textProperty().getValue().toLowerCase();
+
+                    if (listPersonElementController.getNameString().toLowerCase().contains(peoples_search.textProperty().getValue().toLowerCase())) {
+                        peoples_list_view.getItems().add(pane);
+                    }
                 }
-            }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }

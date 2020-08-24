@@ -163,12 +163,7 @@ public class SeriesController implements Initializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
-
-
     }
-    
 
     public void searchSeries(ActionEvent actionEvent) {
         System.out.println(series_search.textProperty().getValue());
@@ -178,68 +173,69 @@ public class SeriesController implements Initializable {
         if (series_search.textProperty().getValue().equals("")) {
             series_list_view.setItems(entries);
         }
+            Map<Integer, ListSeriesElementController> allSeries;
+            try {
+                allSeries = getAllSeries();
+                System.out.println(allSeries.size());
 
-        Map<Integer, ListSeriesElementController> allSeries;
-        try {
-            allSeries = getAllSeries();
-            System.out.println(allSeries.size());
-
-            HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListSeriesElementController> entry: allSeries.entrySet()) {
-                toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
-            }
-
-            LinkedHashMap<Integer, String> sortedByTitle = sortHashMapByValues(toBeSortedByTitle);
-
-            int i=0;
-
-            for (Map.Entry<Integer, String> entry: sortedByTitle.entrySet()) {
-                //System.out.println(entry.getKey() + " / " + entry.getValue());
-                i++;
-
-                URL url = new File("src/main/resources/ListSeriesElement.fxml").toURI().toURL();
-                FXMLLoader fxmlLoader = new FXMLLoader(url);
-                Pane pane = (Pane) fxmlLoader.load();
-
-                ListSeriesElementController listSeriesElementController = fxmlLoader.getController();
-
-                ListSeriesElementController listSeriesElementController1 = allSeries.get(entry.getKey());
-
-                if (i % 2 == 1){
-                    listSeriesElementController.listElement.setStyle("-fx-background-color: #ffffff");
+                HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
+                for (Map.Entry<Integer, ListSeriesElementController> entry : allSeries.entrySet()) {
+                    toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
                 }
 
-                listSeriesElementController.setId(listSeriesElementController1.getId());
-                listSeriesElementController.setTitleString(listSeriesElementController1.getTitleString());
-                listSeriesElementController.setYearString(listSeriesElementController1.getYearString());;
-                listSeriesElementController.setDbId(listSeriesElementController1.getDbId());
-                listSeriesElementController.setValues();
+                LinkedHashMap<Integer, String> sortedByTitle = sortHashMapByValues(toBeSortedByTitle);
 
-                searchGlobal = series_search.textProperty().getValue().toLowerCase();
+                int i = 0;
 
-                if (pickedYearGlobal.equals("Wybierz rok")){
-                    System.out.println("search series if 1");
-                    if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase())) {
-                        series_list_view.getItems().add(pane);
-                        System.out.println("search series if 1.1");
+                for (Map.Entry<Integer, String> entry : sortedByTitle.entrySet()) {
+                    //System.out.println(entry.getKey() + " / " + entry.getValue());
+                    i++;
+
+                    URL url = new File("src/main/resources/ListSeriesElement.fxml").toURI().toURL();
+                    FXMLLoader fxmlLoader = new FXMLLoader(url);
+                    Pane pane = (Pane) fxmlLoader.load();
+
+                    ListSeriesElementController listSeriesElementController = fxmlLoader.getController();
+
+                    ListSeriesElementController listSeriesElementController1 = allSeries.get(entry.getKey());
+
+                    if (i % 2 == 1) {
+                        listSeriesElementController.listElement.setStyle("-fx-background-color: #ffffff");
                     }
 
-                } else {
-                    String pickedYear = "(" + pickedYearGlobal + ")";
-                    String tempYear = listSeriesElementController.getYearString();
-                    System.out.println("search series else 1 "+pickedYear+ " / "+tempYear + " | " + searchGlobal + " / " + series_search.textProperty().getValue().toLowerCase());
-                    if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear) )) {
-                        series_list_view.getItems().add(pane);
-                        System.out.println("search series else 1.1");
+                    listSeriesElementController.setId(listSeriesElementController1.getId());
+                    listSeriesElementController.setTitleString(listSeriesElementController1.getTitleString());
+                    listSeriesElementController.setYearString(listSeriesElementController1.getYearString());
+                    ;
+                    listSeriesElementController.setDbId(listSeriesElementController1.getDbId());
+                    listSeriesElementController.setValues();
+
+                    searchGlobal = series_search.textProperty().getValue().toLowerCase();
+
+                    if (pickedYearGlobal.equals("Wybierz rok")) {
+                        System.out.println("search series if 1");
+                        if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase())) {
+                            series_list_view.getItems().add(pane);
+                            System.out.println("search series if 1.1");
+                        }
+
+                    } else {
+                        String pickedYear = "(" + pickedYearGlobal + ")";
+                        String tempYear = listSeriesElementController.getYearString();
+                        System.out.println("search series else 1 " + pickedYear + " / " + tempYear + " | " + searchGlobal + " / " + series_search.textProperty().getValue().toLowerCase());
+                        if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear))) {
+                            series_list_view.getItems().add(pane);
+                            System.out.println("search series else 1.1");
+                        }
                     }
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
 
     }

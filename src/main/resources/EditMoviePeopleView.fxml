@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="770.0" style="-fx-background-color: #bbbbbb;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditMoviePeopleController">
+   <children>
+      <HBox>
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="edit_movie_people_poster" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true">
+                     <VBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@nopicture.jpg" />
+                     </image>
+                  </ImageView>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="edit_movie_people_cancel_button" layoutX="46.0" layoutY="64.0" mnemonicParsing="false" onAction="#cancelChanges" prefWidth="148.0" style="-fx-background-color: #ffffff;" text="ANULUJ">
+                           <padding>
+                              <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </Pane>
+                  <Button fx:id="edit_movie_people_save_button" layoutX="56.0" layoutY="459.0" mnemonicParsing="false" onAction="#saveChanges" prefWidth="148.0" style="-fx-background-color: #ffffff;" text="ZAPISZ">
+                     <padding>
+                        <Insets bottom="7.0" left="20.0" right="20.0" top="7.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label fx:id="edit_movie_people_title" alignment="TOP_LEFT" prefHeight="70.0" prefWidth="500.0" text="Nazwa filmu raz dwa trzy bardzo dlugi tytul ale to baaardzo dlugi tytul taki dlugi ze sie nie miesci" wrapText="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="510.0">
+                     <children>
+                        <VBox prefHeight="370.0" prefWidth="510.0">
+                           <children>
+                              <HBox prefHeight="37.0" prefWidth="510.0" style="-fx-background-color: #cccccc;">
+                                 <children>
+                                    <Label text="Aktorzy:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Pane prefHeight="200.0" prefWidth="265.0" />
+                                    <TextField fx:id="peoples_search" onAction="#searchPeople" promptText="Szukaj...">
+                                       <HBox.margin>
+                                          <Insets top="7.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
+                              <ListView fx:id="edit_movie_people_all_list" layoutX="10.0" layoutY="84.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="510.0" />
+                              <HBox layoutX="10.0" layoutY="177.0" prefHeight="100.0" prefWidth="510.0" style="-fx-background-color: #cccccc;">
+                                 <children>
+                                    <Label text="Obsada:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Pane prefHeight="200.0" prefWidth="265.0" />
+                                    <Button mnemonicParsing="false" onAction="#moveToCast" style="-fx-background-color: #ffffff;" text="Dodaj">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="100.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <ListView fx:id="edit_movie_people_cast_list" prefHeight="200.0" prefWidth="510.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Pane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
