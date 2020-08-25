@@ -4,10 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.AccessibleAction;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,10 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -41,7 +39,9 @@ public class EditMoviePeopleController {
     Image poster;
     String lastView;
     Map<Integer, Label> people = new HashMap<>();
+    Map<Integer, JsonObject> peopleMapJson = new HashMap<>();
     Label pickedActor;
+    JsonArray allCast = new JsonArray();
 
     public String getLastView() {
         return lastView;
@@ -87,10 +87,13 @@ public class EditMoviePeopleController {
         HBox hBox = new HBox();
         Label label = new Label();
         label.setText(edit_movie_people_all_list.getSelectionModel().getSelectedItem().getText());
-        label.setId(edit_movie_people_all_list.getSelectionModel().getSelectedItem().getId());
+        label.setId(edit_movie_people_all_list.getSelectionModel().getSelectedItem().getId().toString());
         hBox.getChildren().add(label);
         hBox.getChildren().add(new Label(" jako "));
         TextField textField = new TextField();
+        textField.setId("character_name_field");
+
+
         hBox.getChildren().add(textField);
         Button delete = new Button("usuń");
         delete.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -153,6 +156,7 @@ public class EditMoviePeopleController {
                             });
 
                 people.put(i, label);
+                peopleMapJson.put(i, peopleObj);
 
             }
 
@@ -177,7 +181,58 @@ public class EditMoviePeopleController {
         }
     }
 
-    public void getCast() {
+    public void saveCast() throws IOException {
+
+        for (int i = 0; i < edit_movie_people_cast_list.getItems().size(); i++) {
+
+            JsonObject moviePeople = new JsonObject();
+            String characterName;
+            JsonObject id_movie = new JsonObject();
+            JsonObject id_person = new JsonObject();
+
+            HBox element = new HBox();
+            element = edit_movie_people_cast_list.getItems().get(i);
+            Label label = new Label();
+            label = (Label) element.getChildren().get(0);
+            TextField textField = new TextField();
+            textField = (TextField) element.getChildren().get(2);
+            id_person = peopleMapJson.get(Integer.valueOf(label.getId())-1);
+            id_movie = getMovieData();
+            characterName = textField.getText();
+
+            moviePeople.addProperty("character_name", characterName);
+            moviePeople.add("id_person", id_person);
+            moviePeople.add("id_movie", id_movie);
+
+            //System.out.println(moviePeople.toString());
+            allCast.add(moviePeople);
+        }
+
+        for (int i = 0; i < allCast.size(); i++) {
+            System.out.println(allCast.get(i).toString());
+        }
+
+
+    }
+
+    public JsonObject getMovieData() throws IOException {
+
+        String link = "http://localhost:8080/movie/" + id;
+        HttpURLConnection httpURLConnection;
+        StringBuilder stringBuilder = new StringBuilder();
+        URL url = new URL(link);
+        httpURLConnection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        while((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        httpURLConnection.disconnect();
+
+        JsonObject jsonObject = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
+        return jsonObject;
 
     }
 
@@ -205,6 +260,13 @@ public class EditMoviePeopleController {
     }
 
     public void saveChanges(ActionEvent actionEvent) {
+
+        try {
+            saveCast();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private LinkedHashMap<Integer, String> sortHashMapByValues(
