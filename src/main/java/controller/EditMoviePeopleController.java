@@ -204,7 +204,6 @@ public class EditMoviePeopleController {
             moviePeople.add("id_person", id_person);
             moviePeople.add("id_movie", id_movie);
 
-            //System.out.println(moviePeople.toString());
             allCast.add(moviePeople);
         }
 
@@ -213,6 +212,31 @@ public class EditMoviePeopleController {
         }
 
 
+    }
+
+    public void getInitialMoviePeople() throws IOException {
+
+        JsonArray allMoviePeople = new JsonArray();
+
+        String link = "http://localhost:8080/moviepeople/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        allMoviePeople = (JsonArray) jsonParser.parse(reader);
+
+        JsonArray thisMoviePeople = new JsonArray();
+        JsonObject id_movie = getMovieData();
+
+        for (int i = 0; i < allMoviePeople.size(); i++) {
+
+            if (allMoviePeople.get(i).getAsJsonObject().get("id_movie").equals(id_movie)) {
+                thisMoviePeople.add(allMoviePeople.get(i).getAsJsonObject());
+            }
+
+        }
+
+        //return moviePeople;
     }
 
     public JsonObject getMovieData() throws IOException {
