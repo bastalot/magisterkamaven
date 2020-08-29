@@ -329,4 +329,24 @@ public class SingleSeriesController {
         return genres;
     }
 
+    public void editCast(ActionEvent actionEvent) {
+
+        try {
+            url = ClassLoader.getSystemResource("EditMoviePeopleView.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            Parent parent = fxmlLoader.load();
+
+            EditMoviePeopleController editMoviePeopleController = fxmlLoader.getController();
+            editMoviePeopleController.loadInitialData(id, single_series_title.getText(), poster);
+            editMoviePeopleController.setLastView(lastView);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

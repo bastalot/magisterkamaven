@@ -22,17 +22,16 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.*;
 
-public class EditMoviePeopleController {
-    public ImageView edit_movie_people_poster;
-    public Button edit_movie_people_cancel_button;
-    public Button edit_movie_people_save_button;
-    public Label edit_movie_people_title;
-    public ListView<Label> edit_movie_people_all_list;
-    public ListView<HBox> edit_movie_people_cast_list;
+public class EditSeriesPeopleController {
+    public ImageView edit_series_people_poster;
+    public Button edit_series_people_cancel_button;
+    public Button edit_series_people_save_button;
+    public Label edit_series_people_title;
+    public ListView<Label> edit_series_people_all_list;
+    public ListView<HBox> edit_series_people_cast_list;
     public TextField peoples_search;
 
     String id;
@@ -42,9 +41,7 @@ public class EditMoviePeopleController {
     Map<Integer, Label> people = new HashMap<>();
     Map<Integer, JsonObject> peopleMapJson = new HashMap<>();
     Label pickedActor;
-    //JsonArray allCast = new JsonArray(); //ostateczna wersja
-    //JsonArray castToPost = new JsonArray();
-    List<Integer> idMoviePeopletoDelete = new ArrayList<>();
+    List<Integer> idSeriesPeopletoDelete = new ArrayList<>();
 
     public String getLastView() {
         return lastView;
@@ -55,14 +52,14 @@ public class EditMoviePeopleController {
     }
 
     public void searchPeople(ActionEvent actionEvent) {
-        edit_movie_people_all_list.getItems().clear();
+        edit_series_people_all_list.getItems().clear();
 
         if (peoples_search.textProperty().getValue().equals("")) {
             getAllPeople();
         } else {
             Map<Integer, Label> allPeoples;
             allPeoples = people;
-            HashMap<Integer, String> toBeSortedByName = new HashMap<>();
+            HashMap<Integer,String> toBeSortedByName = new HashMap<>();
 
             for (Map.Entry<Integer, Label> entry : allPeoples.entrySet()) {
                 toBeSortedByName.put(entry.getKey(), entry.getValue().getText().toLowerCase());
@@ -76,8 +73,8 @@ public class EditMoviePeopleController {
                 label.setText(allPeoples.get(entry.getKey()).getText());
                 label.setId(allPeoples.get(entry.getKey()).getId());
 
-                if (label.getText().toLowerCase().contains(peoples_search.textProperty().getValue().toLowerCase())) {
-                    edit_movie_people_all_list.getItems().add(label);
+                if (label.getText().toLowerCase().contains(peoples_search.textProperty().getValue().toLowerCase())){
+                    edit_series_people_all_list.getItems().add(label);
                 }
             }
         }
@@ -87,8 +84,8 @@ public class EditMoviePeopleController {
 
         HBox hBox = new HBox();
         Label label = new Label();
-        label.setText(edit_movie_people_all_list.getSelectionModel().getSelectedItem().getText());
-        label.setId(edit_movie_people_all_list.getSelectionModel().getSelectedItem().getId());
+        label.setText(edit_series_people_all_list.getSelectionModel().getSelectedItem().getText());
+        label.setId(edit_series_people_all_list.getSelectionModel().getSelectedItem().getId());
         hBox.getChildren().add(label);
         hBox.getChildren().add(new Label(" jako "));
         TextField textField = new TextField();
@@ -99,8 +96,7 @@ public class EditMoviePeopleController {
         delete.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                edit_movie_people_cast_list.getItems().remove(hBox);
-                //edit_movie_people_cast_list.refresh();
+                edit_series_people_cast_list.getItems().remove(hBox);
             }
         });
         hBox.getChildren().add(delete);
@@ -113,8 +109,8 @@ public class EditMoviePeopleController {
             }
         });
 
-        edit_movie_people_cast_list.getItems().add(hBox);
-        //edit_movie_people_cast_list.refresh();
+        edit_series_people_cast_list.getItems().add(hBox);
+
     }
 
     public void loadInitialData(String id, String title, Image poster) {
@@ -124,16 +120,15 @@ public class EditMoviePeopleController {
         if (poster != null)
             this.poster = poster;
 
-        edit_movie_people_title.setText(title);
-        edit_movie_people_poster.setImage(poster);
+        edit_series_people_title.setText(title);
+        edit_series_people_poster.setImage(poster);
 
         getAllPeople();
         try {
-            getInitialMoviePeople();
+            getInitialSeriesPeople();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void getAllPeople() {
@@ -153,12 +148,12 @@ public class EditMoviePeopleController {
                 label.setId(peopleObj.get("id_person").getAsString());
                 //edit_movie_people_all_list.getItems().add(label);
                 label.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                            @Override
-                                public void handle(MouseEvent event) {
-                                    System.out.println(label.getId().toString() + " / " + label.getText());
-                                    pickedActor = label;
-                                }
-                            });
+                    @Override
+                    public void handle(MouseEvent event) {
+                        System.out.println(label.getId().toString() + " / " + label.getText());
+                        pickedActor = label;
+                    }
+                });
 
                 people.put(i, label);
                 peopleMapJson.put(i, peopleObj);
@@ -173,7 +168,7 @@ public class EditMoviePeopleController {
             LinkedHashMap<Integer, String> sortedByName = sortHashMapByValues(toBeSortedByName);
 
             for (Map.Entry<Integer, String> entry : sortedByName.entrySet()) {
-                edit_movie_people_all_list.getItems().add(people.get(entry.getKey()));
+                edit_series_people_all_list.getItems().add(people.get(entry.getKey()));
             }
 
 
@@ -186,44 +181,42 @@ public class EditMoviePeopleController {
         }
     }
 
-    public void getInitialMoviePeople() throws IOException {
+    public void getInitialSeriesPeople() throws IOException {
 
-        JsonArray allMoviePeople = new JsonArray();
+        JsonArray allSeriesPeople = new JsonArray();
 
-        String link = "http://localhost:8080/moviepeople/all";
+        String link = "http://localhost:8080/seriespeople/all";
         URL url = new URL(link);
         InputStream inputStream = url.openStream();
         Reader reader = new InputStreamReader(inputStream, "utf-8");
         JsonParser jsonParser = new JsonParser();
-        allMoviePeople = (JsonArray) jsonParser.parse(reader);
+        allSeriesPeople = (JsonArray) jsonParser.parse(reader);
 
-        JsonObject id_movie = getMovieData();
+        JsonObject id_series = getSeriesData();
 
-        for (int i = 0; i < allMoviePeople.size(); i++) {
+        for (int i = 0; i < allSeriesPeople.size(); i++) {
 
-            if (allMoviePeople.get(i).getAsJsonObject().get("id_movie").equals(id_movie)) {
-                //thisMoviePeople.add(allMoviePeople.get(i).getAsJsonObject());
-
+            if (allSeriesPeople.get(i).getAsJsonObject().get("id_series").equals(id_series)) {
 
                 HBox hBox = new HBox();
                 Label label = new Label();
-                label.setText(allMoviePeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("person_name").getAsString());
-                label.setId(allMoviePeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("id_person").getAsString());
+                label.setText(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("person_name").getAsString());
+                label.setId(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("id_person").getAsString());
                 hBox.getChildren().add(label);
                 hBox.getChildren().add(new Label(" jako "));
 
                 TextField textField = new TextField();
                 textField.setId("character_name_field");
-                textField.setText(allMoviePeople.get(i).getAsJsonObject().get("character_name").getAsString());
+                textField.setText(allSeriesPeople.get(i).getAsJsonObject().get("character_name").getAsString());
                 hBox.getChildren().add(textField);
 
                 Button delete = new Button("usuń");
-                delete.setId(allMoviePeople.get(i).getAsJsonObject().get("id_moviepeople").getAsString()); // to get id to delete from moviepeople table
+                delete.setId(allSeriesPeople.get(i).getAsJsonObject().get("id_seriespeople").getAsString());
                 delete.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        edit_movie_people_cast_list.getItems().remove(hBox);
-                        idMoviePeopletoDelete.add(Integer.valueOf(delete.getId()));
+                        edit_series_people_cast_list.getItems().remove(hBox);
+                        idSeriesPeopletoDelete.add(Integer.valueOf(delete.getId()));
                     }
                 });
                 hBox.getChildren().add(delete);
@@ -236,19 +229,15 @@ public class EditMoviePeopleController {
                     }
                 });
 
-                edit_movie_people_cast_list.getItems().add(hBox);
-                //allCast.add(allMoviePeople.get(i));
+                edit_series_people_cast_list.getItems().add(hBox);
 
             }
-
         }
-
-        //return moviePeople;
     }
 
-    public JsonObject getMovieData() throws IOException {
+    public JsonObject getSeriesData() throws IOException {
 
-        String link = "http://localhost:8080/movie/" + id;
+        String link = "http://localhost:8080/tvseries/" + id;
         HttpURLConnection httpURLConnection;
         StringBuilder stringBuilder = new StringBuilder();
         URL url = new URL(link);
@@ -261,22 +250,20 @@ public class EditMoviePeopleController {
             stringBuilder.append(line);
         }
         httpURLConnection.disconnect();
-
         JsonObject jsonObject = new JsonParser().parse(stringBuilder.toString()).getAsJsonObject();
         return jsonObject;
-
     }
 
     public void cancelChanges(ActionEvent actionEvent) {
 
         try {
-            URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
+            URL url = ClassLoader.getSystemResource("SingleSeriesView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             Parent parent = fxmlLoader.load();
 
-            SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.getMovieData(id);
-            singleMovieController.setLastView(lastView);
+            SingleSeriesController singleSeriesController = fxmlLoader.getController();
+            singleSeriesController.getSeriesData(id);
+            singleSeriesController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -284,8 +271,8 @@ public class EditMoviePeopleController {
 
             stage.show();
 
-        } catch(Exception e) {
-            System.out.println(e + " cancelChanges in EditmoviePeopleController");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -293,15 +280,15 @@ public class EditMoviePeopleController {
     public void saveChanges(ActionEvent actionEvent) {
 
         try {
-            for (int i = 0; i < edit_movie_people_cast_list.getItems().size(); i++) {
+            for (int i = 0; i < edit_series_people_cast_list.getItems().size(); i++) {
 
-                JsonObject moviePeople = new JsonObject();
+                JsonObject seriesPeople = new JsonObject();
                 String characterName;
-                JsonObject id_movie = new JsonObject();
+                JsonObject id_tvseries = new JsonObject();
                 JsonObject id_person = new JsonObject();
 
                 HBox element = new HBox();
-                element = edit_movie_people_cast_list.getItems().get(i);
+                element = edit_series_people_cast_list.getItems().get(i);
                 Label label = new Label();
                 label = (Label) element.getChildren().get(0);
                 TextField textField = new TextField();
@@ -309,19 +296,20 @@ public class EditMoviePeopleController {
                 Button delete = (Button) element.getChildren().get(3);
 
                 id_person = peopleMapJson.get(Integer.valueOf(label.getId())-1);
-                id_movie = getMovieData();
+                id_tvseries = getSeriesData();
                 characterName = textField.getText();
 
-                if (delete.getId()!=null){
-                    moviePeople.addProperty("id_moviepeople", delete.getId());
+                if (delete.getId()!=null) {
+                    seriesPeople.addProperty("id_moviepeople", delete.getId());
                 }
-                moviePeople.addProperty("character_name", characterName);
-                moviePeople.add("id_person", id_person);
-                moviePeople.add("id_movie", id_movie);
+                seriesPeople.addProperty("character_name", characterName);
+                seriesPeople.add("id_person", id_person);
+                seriesPeople.add("id_tvseries", id_tvseries);
 
-                if (delete.getId()!=null) { //button usun w przypadku istniejacego juz rekordu jako id ma ustawione id_moviepeople
+                if (delete.getId()!=null)
+                { //button usun w przypadku istniejacego juz rekordu jako id ma ustawione id_seriespeople
 
-                    URL url = new URL("http://localhost:8080/moviepeople/" + delete.getId());
+                    URL url = new URL("http://localhost:8080/seriespeople/" + delete.getId());
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con.setRequestMethod("PUT");
                     con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -329,7 +317,7 @@ public class EditMoviePeopleController {
                     con.setDoOutput(true);
 
                     try(OutputStream os = con.getOutputStream()) {
-                        byte[] input = moviePeople.toString().getBytes("utf-8");
+                        byte[] input = seriesPeople.toString().getBytes("utf-8");
                         os.write(input, 0, input.length);
                     }
 
@@ -342,10 +330,9 @@ public class EditMoviePeopleController {
                         }
                         System.out.println(response.toString());
                     }
-
                 } else {
 
-                    URL url = new URL("http://localhost:8080/moviepeople");
+                    URL url = new URL("http://localhost:8080/seriespeople");
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con.setRequestMethod("POST");
                     con.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -353,7 +340,7 @@ public class EditMoviePeopleController {
                     con.setDoOutput(true);
 
                     try(OutputStream os = con.getOutputStream()) {
-                        byte[] input = moviePeople.toString().getBytes("utf-8");
+                        byte[] input = seriesPeople.toString().getBytes("utf-8");
                         os.write(input, 0, input.length);
                     }
 
@@ -368,13 +355,12 @@ public class EditMoviePeopleController {
                     }
                     con.disconnect();
                 }
-                //System.out.println(moviePeople.toString());
             }
 
-            for (int i = 0; i < idMoviePeopletoDelete.size(); i++) {
+            for (int i = 0; i < idSeriesPeopletoDelete.size(); i++) {
 
                 try {
-                    URL url1 = new URL("http://localhost:8080/moviepeople/" + idMoviePeopletoDelete.get(i));
+                    URL url1 = new URL("http://localhost:8080/seriespeople/" + idSeriesPeopletoDelete.get(i));
                     HttpURLConnection httpCon = (HttpURLConnection) url1.openConnection();
                     httpCon.setDoInput(true);
                     httpCon.setInstanceFollowRedirects(false);
@@ -385,27 +371,24 @@ public class EditMoviePeopleController {
 
                     System.out.println("response: " + httpCon.getResponseMessage());
                     httpCon.disconnect();
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
+            URL url = ClassLoader.getSystemResource("SingleSeriesView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             Parent parent = fxmlLoader.load();
 
-            SingleMovieController singleMovieController = fxmlLoader.getController();
-            singleMovieController.getMovieData(id);
-            singleMovieController.setLastView(lastView);
+            SingleSeriesController singleSeriesController = fxmlLoader.getController();
+            singleSeriesController.getSeriesData(id);
+            singleSeriesController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -447,5 +430,4 @@ public class EditMoviePeopleController {
         }
         return sortedMap;
     }
-
 }

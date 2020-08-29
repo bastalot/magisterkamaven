@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +20,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -38,12 +42,14 @@ public class SingleMovieController implements Initializable {
 
 
     public Label movie_genres_label;
-    public ListView<Label> movie_peoples_list;
+    public VBox movie_peoples_vbox;
+
     URL url;
     String id;
     Image poster;
     byte[] bytes = null;
     String lastView;
+    JsonObject id_movie;
 
     @FXML
     private ImageView single_movie_poster;
@@ -110,6 +116,8 @@ public class SingleMovieController implements Initializable {
         System.out.println(stringBuilder.toString());
 
         JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+        JsonParser jsonParser = new JsonParser();
+        id_movie = (JsonObject) jsonParser.parse(jsonObject.toString());
 
         if (jsonObject.get("title").toString() != "null") {
             single_movie_title.setText(jsonObject.getString("title"));
@@ -240,26 +248,29 @@ public class SingleMovieController implements Initializable {
 
     public void getMoviePeople() throws IOException {
 
+        JsonArray allMoviePeople = new JsonArray();
+
         String link = "http://localhost:8080/moviepeople/all";
         URL url = new URL(link);
         InputStream inputStream = url.openStream();
         Reader reader = new InputStreamReader(inputStream, "utf-8");
         JsonParser jsonParser = new JsonParser();
-        JsonArray peopleJsonArray = (JsonArray) jsonParser.parse(reader);
+        allMoviePeople = (JsonArray) jsonParser.parse(reader);
 
-        for (int i = 0; i < peopleJsonArray.size(); i++) {
-            JsonObject moviePeopleObj = peopleJsonArray.get(i).getAsJsonObject();
-
-            JsonObject movieObj = moviePeopleObj.getAsJsonObject("id_movie");
-            JsonObject personObj = moviePeopleObj.getAsJsonObject("id_person");
-            String characterName = moviePeopleObj.get("character_name").getAsString();
-            String idMoviePeople = moviePeopleObj.get("id_moviepeople").getAsString();
-
-            if (movieObj.get("id_movie").getAsString().equals(id)) {
+        for (int i = 0; i < allMoviePeople.size(); i++) {
+            if (allMoviePeople.get(i).getAsJsonObject().get("id_movie").equals(id_movie)) {
                 Label label = new Label();
-                label.setText(personObj.get("person_name").getAsString() + " jako " + characterName);
-                label.setId(idMoviePeople);
-                movie_peoples_list.getItems().add(label);
+
+                String personName = allMoviePeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("person_name").getAsString();
+                String characterName = allMoviePeople.get(i).getAsJsonObject().get("character_name").getAsString();
+
+                label.setText(personName + " jako " + characterName);
+                label.setPadding(new Insets(5,5,5,5));
+                label.setPrefWidth(500);
+                if (i%2 == 0) {
+                    label.setStyle("-fx-background-color:rgba(119,119,119,0.19);");
+                }
+                movie_peoples_vbox.getChildren().add(label);
             }
         }
     }
