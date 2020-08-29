@@ -332,13 +332,13 @@ public class SingleSeriesController {
     public void editCast(ActionEvent actionEvent) {
 
         try {
-            url = ClassLoader.getSystemResource("EditMoviePeopleView.fxml");
+            url = ClassLoader.getSystemResource("EditSeriesPeopleView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             Parent parent = fxmlLoader.load();
 
-            EditMoviePeopleController editMoviePeopleController = fxmlLoader.getController();
-            editMoviePeopleController.loadInitialData(id, single_series_title.getText(), poster);
-            editMoviePeopleController.setLastView(lastView);
+            EditSeriesPeopleController editSeriesPeopleController =fxmlLoader.getController();
+            editSeriesPeopleController.loadInitialData(id, single_series_title.getText(), poster);
+            editSeriesPeopleController.setLastView(lastView);
 
             Scene scene = new Scene(parent);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

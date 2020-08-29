@@ -192,11 +192,11 @@ public class EditSeriesPeopleController {
         JsonParser jsonParser = new JsonParser();
         allSeriesPeople = (JsonArray) jsonParser.parse(reader);
 
-        JsonObject id_series = getSeriesData();
+        JsonObject id_tvseries = getSeriesData();
 
         for (int i = 0; i < allSeriesPeople.size(); i++) {
 
-            if (allSeriesPeople.get(i).getAsJsonObject().get("id_series").equals(id_series)) {
+            if (allSeriesPeople.get(i).getAsJsonObject().get("id_tvseries").equals(id_tvseries)) {
 
                 HBox hBox = new HBox();
                 Label label = new Label();
