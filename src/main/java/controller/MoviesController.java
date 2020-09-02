@@ -18,27 +18,16 @@ import java.util.*;
 public class MoviesController implements Initializable {
 
     ObservableList<Pane> entries = FXCollections.observableArrayList();
-    String pickedYearGlobal = "Wybierz rok";
     String searchGlobal = "";
-
-    @FXML
-    public ComboBox<String> movies_combo_box;
+    ;
     @FXML
     public TextField movies_search;
-    //@FXML
-    //public VBox movies_view_main_box;
     @FXML
     public ListView<Pane> movies_list_view;
 
 
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("MoviesController working");
-
-        movies_combo_box.getItems().add("Wybierz rok");
-        for(int i = 2020; i >= 1900; i--){
-            movies_combo_box.getItems().add(String.valueOf(i));
-        }
-
 
         Map<Integer, ListMovieElementController> allMovies;
         try {
@@ -86,85 +75,6 @@ public class MoviesController implements Initializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-    }
-
-    public void pickYear(ActionEvent actionEvent) throws IOException, ParseException {
-        System.out.println(movies_combo_box.getValue());
-
-
-        movies_list_view.getItems().clear();
-
-        if (movies_combo_box.getValue().equals("Wybierz rok")) {
-            movies_list_view.setItems(entries);
-        }
-
-
-        Map<Integer, ListMovieElementController> allMovies;
-        try {
-            allMovies = getAllMovies();
-            System.out.println(allMovies.size());
-
-            HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListMovieElementController> entry: allMovies.entrySet()) {
-                toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
-            }
-
-            LinkedHashMap<Integer, String> sortedByTitle = sortHashMapByValues(toBeSortedByTitle);
-
-            int i=0;
-
-            for (Map.Entry<Integer, String> entry: sortedByTitle.entrySet()) {
-                //System.out.println(entry.getKey() + " / " + entry.getValue());
-                i++;
-
-                URL url = new File("src/main/resources/ListMovieElement.fxml").toURI().toURL();
-                FXMLLoader fxmlLoader = new FXMLLoader(url);
-                Pane pane = (Pane) fxmlLoader.load();
-
-                ListMovieElementController listMovieElementController = fxmlLoader.getController();
-
-                ListMovieElementController listMovieElementController1 = allMovies.get(entry.getKey());
-
-                if (i % 2 == 1){
-                    listMovieElementController.listElement.setStyle("-fx-background-color: #ffffff");
-                }
-
-                listMovieElementController.setId(listMovieElementController1.getId());
-                listMovieElementController.setTitleString(listMovieElementController1.getTitleString());
-                listMovieElementController.setYearString(listMovieElementController1.getYearString());;
-                listMovieElementController.setDbId(listMovieElementController1.getDbId());
-                listMovieElementController.setValues();
-
-
-                pickedYearGlobal = movies_combo_box.getValue();
-                String pickedYear ="(" + movies_combo_box.getValue() + ")";
-
-                if(searchGlobal.equals("")){
-                    System.out.println("pick year if 1");
-                    if (listMovieElementController.getYearString().equals(pickedYear)){
-                        movies_list_view.getItems().add(pane);
-                        System.out.println("pick year if 1.1");
-                    }
-
-                } else {
-                    System.out.println("pick year else 1");
-                    if (pickedYear.equals(listMovieElementController.getYearString()) && listMovieElementController.getTitleString().toLowerCase().contains(searchGlobal)) {
-                        System.out.println("pick year else 1.1");
-                        movies_list_view.getItems().add(pane);
-                    }
-                }
-
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
 
     }
 
@@ -216,23 +126,13 @@ public class MoviesController implements Initializable {
 
                     searchGlobal = movies_search.textProperty().getValue().toLowerCase();
 
-                    if (pickedYearGlobal.equals("Wybierz rok")) {
-                        System.out.println("search movie if 1");
-                        if (listMovieElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase())) {
-                            movies_list_view.getItems().add(pane);
-                            System.out.println("search movie if 1.1");
-                        }
 
-                    } else {
-                        String pickedYear = "(" + pickedYearGlobal + ")";
-                        String tempYear = listMovieElementController.getYearString();
-                        System.out.println("search movie else 1 " + pickedYear + " / " + tempYear + " | " + searchGlobal + " / " + movies_search.textProperty().getValue().toLowerCase());
-                        if (listMovieElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear))) {
+                        if (listMovieElementController.getTitleString().toLowerCase().contains(movies_search.textProperty().getValue().toLowerCase())) {
                             movies_list_view.getItems().add(pane);
                             System.out.println("search movie else 1.1");
                         }
                     }
-                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();

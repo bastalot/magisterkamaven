@@ -13,18 +13,20 @@
                <children>
                   <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="670.0">
                      <items>
-                        <ComboBox fx:id="movies_combo_box" onAction="#pickYear" prefWidth="150.0" promptText="Wybierz rok" />
-                        <Pane prefHeight="44.0" prefWidth="330.0">
+                        <Pane prefHeight="44.0" prefWidth="480.0">
                            <children>
                               <Label alignment="CENTER" text="FILMY">
                                  <padding>
-                                    <Insets left="150.0" top="5.0" />
+                                    <Insets left="300.0" top="5.0" />
                                  </padding>
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Label>
                            </children>
+                           <padding>
+                              <Insets left="150.0" />
+                           </padding>
                         </Pane>
                         <TextField fx:id="movies_search" onAction="#searchMovie" promptText="Szukaj..." />
                      </items>

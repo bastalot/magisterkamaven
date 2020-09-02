@@ -4,7 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +15,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
@@ -40,6 +45,7 @@ public class EditSingleSeriesController {
     public Button save_edit_series_button;
     public Label series_error_label;
     public Label label_added_series;
+    public HBox series_seasons_hbox;
 
     private String id;
     private String title = "";
@@ -52,6 +58,7 @@ public class EditSingleSeriesController {
     private String initialgenres = "";
     private String genres = "";
     private JsonObject id_tvseries;
+    private List<Integer> idSeassontoDelete = new ArrayList<>();
 
 
     public String getLastView() {
@@ -186,9 +193,10 @@ public class EditSingleSeriesController {
             manageGenres();
         }
 
-        StringWriter out = new StringWriter();
-        jsonObject.writeJSONString(out);
-        String jsonText = out.toString();
+        //StringWriter out = new StringWriter();
+        //jsonObject.writeJSONString(out);
+        //String jsonText = out.toString();
+        System.out.println(jsonObject.toString());
 
 
         try(OutputStream os = con.getOutputStream()) {
@@ -196,7 +204,7 @@ public class EditSingleSeriesController {
             os.write(input, 0, input.length);
         }
 
-        System.out.println(jsonText);
+        //System.out.println(jsonText);
 
         try(BufferedReader br = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), "utf-8"))) {
@@ -237,16 +245,16 @@ public class EditSingleSeriesController {
                 else jsonObject1.put("summary", null);
             }
 
-            StringWriter out1 = new StringWriter();
-            jsonObject1.writeJSONString(out1);
-            String jsonText1 = out.toString();
+            //StringWriter out1 = new StringWriter();
+            //jsonObject1.writeJSONString(out1);
+            //String jsonText1 = out.toString();
 
             try(OutputStream os = con1.getOutputStream()) {
                 byte[] input = jsonObject1.toString().getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            System.out.println("while1 " + jsonText1);
+            //System.out.println("while1 " + jsonText1);
 
             try(BufferedReader br = new BufferedReader(
                     new InputStreamReader(con1.getInputStream(), "utf-8"))) {
@@ -262,7 +270,7 @@ public class EditSingleSeriesController {
 
         //for (int i=0; i < seasonsBySeries.entrySet().size(); i++){        }
 
-
+        saveSeassons();
         label_added_series.setText("Edycja pomyślna");
     }
 
@@ -551,6 +559,7 @@ public class EditSingleSeriesController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        getInitialSeassons();
 
     }
 
@@ -613,7 +622,6 @@ public class EditSingleSeriesController {
 
         System.out.println(id_tvseries + " / " + seassonsJsonArray);
 
-
         //while (seassonsJsonArray.iterator().hasNext()) {
         for (int i = 0; i < seassonsJsonArray.size(); i++){
 
@@ -623,11 +631,186 @@ public class EditSingleSeriesController {
                 series.add(seassonsObj);
                         //put(seassonsObj.get("id_tvseassons").getAsInt(), seassonsObj);
             }
-
         }
         return series;
     }
 
+    public void addNewSeasson(ActionEvent actionEvent) {
+
+        Integer newSeassonNumber = series_seasons_hbox.getChildren().size()+1;
+
+        Hyperlink seassonNumber = new Hyperlink();
+        seassonNumber.setText(newSeassonNumber.toString());
+        seassonNumber.setPrefHeight(27);
+        seassonNumber.setPrefWidth(35);
+        seassonNumber.setFont(new Font("System", 18));
+        seassonNumber.setPadding(new Insets(5,5,5,5));
+
+        series_seasons_hbox.getChildren().add(seassonNumber);
+
+    }
+
+    public void deleteLastSeasson(ActionEvent actionEvent) {
+
+        Hyperlink hyperlink = new Hyperlink();
+        hyperlink = (Hyperlink) series_seasons_hbox.getChildren().get(series_seasons_hbox.getChildren().size()-1);
+
+        if (hyperlink.getId() != null) {
+            idSeassontoDelete.add(Integer.valueOf(hyperlink.getId()));
+        }
+        series_seasons_hbox.getChildren().remove(hyperlink);
+
+    }
+
+    public void saveSeassons() {
+
+        try {
+            for (int i = 0; i < series_seasons_hbox.getChildren().size(); i++) {
+
+                JsonObject tvSeasson = new JsonObject();
+                Integer seassonNumber;
+                String summary;
+                JsonObject id_tvseries = getSeriesData();
+
+                Hyperlink hyperlink = new Hyperlink();
+                hyperlink = (Hyperlink) series_seasons_hbox.getChildren().get(i);
+
+                seassonNumber = Integer.valueOf(hyperlink.getText());
+                summary = "opis sezonu " + seassonNumber;
+
+                if (hyperlink.getId() != null) {
+                    tvSeasson.addProperty("id_tvseassons", hyperlink.getId());
+                }
+                tvSeasson.addProperty("seasson_number", seassonNumber);
+                tvSeasson.addProperty("summary", summary);
+                tvSeasson.add("id_tvseries", id_tvseries);
 
 
+                if (hyperlink.getId() != null)  {
+                    URL url = new URL("http://localhost:8080/tvseassons/"+hyperlink.getId());
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("PUT");
+                    con.setRequestProperty("Content-Type", "application/json; utf-8");
+                    con.setRequestProperty("Accept", "application/json");
+                    con.setDoOutput(true);
+
+                    try (OutputStream os = con.getOutputStream()) {
+                        byte[] input = tvSeasson.toString().getBytes("utf-8");
+                        os.write(input, 0, input.length);
+                    }
+
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                        StringBuilder response = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        System.out.println(response.toString());
+                    }
+                } else {
+
+                    URL url = new URL("http://localhost:8080/tvseassons");
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("POST");
+                    con.setRequestProperty("Content-Type", "application/json; utf-8");
+                    con.setRequestProperty("Accept", "application/json");
+                    con.setDoOutput(true);
+
+                    try(OutputStream os = con.getOutputStream()) {
+                        byte[] input = tvSeasson.toString().getBytes("utf-8");
+                        os.write(input, 0, input.length);
+                    }
+
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(con.getInputStream(), "utf-8"))){
+                        StringBuilder response = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        System.out.println(response.toString());
+                    }
+                    con.disconnect();
+                }
+
+            }
+
+            for (int i = 0; i < idSeassontoDelete.size(); i++) {
+
+                URL url = new URL("http://localhost:8080/tvseassons/"+idSeassontoDelete.get(i));
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setDoOutput(true);
+                con.setInstanceFollowRedirects(false);
+                con.setRequestMethod("DELETE");
+                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                con.setRequestProperty("charset", "utf-8");
+                con.setUseCaches(false);
+
+                System.out.println("response: " + con.getResponseMessage());
+                con.disconnect();
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public JsonObject getSeriesData() throws IOException {
+
+        String link = "http://localhost:8080/tvseries/"+id;
+        HttpURLConnection con;
+        StringBuilder stringBuilder = new StringBuilder();
+        URL url = new URL(link);
+
+        con = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = new BufferedInputStream(con.getInputStream());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        JsonParser jsonParser = new JsonParser();
+        JsonObject series = (JsonObject) jsonParser.parse(reader);
+
+        return series;
+
+
+    }
+
+    public void getInitialSeassons() {
+        try {
+            ArrayList<JsonObject> allSeassons = getAllSeassonsBySeriesId(Integer.valueOf(id));
+            HashMap<Integer, Integer> seassonNumberId = new HashMap<>();
+
+            System.out.println(allSeassons.size());
+
+            for (int i = 0; i < allSeassons.size(); i++) {
+                JsonObject tvSeasson = allSeassons.get(i);
+                Integer id_tvseasson = tvSeasson.get("id_tvseassons").getAsInt();
+                Integer seassonNumber = tvSeasson.get("seasson_number").getAsInt();
+
+                seassonNumberId.put(seassonNumber, id_tvseasson);
+            }
+
+            System.out.println(seassonNumberId.size());
+
+            for (Map.Entry<Integer, Integer> entry: seassonNumberId.entrySet()) {
+
+                Hyperlink seassonNumber = new Hyperlink();
+                seassonNumber.setText(entry.getKey().toString());
+                seassonNumber.setPrefHeight(27);
+                seassonNumber.setPrefWidth(35);
+                seassonNumber.setFont(new Font("System", 18));
+                seassonNumber.setPadding(new Insets(5,5,5,5));
+                seassonNumber.setId(entry.getValue().toString());
+
+                series_seasons_hbox.getChildren().add(seassonNumber);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -46,7 +46,6 @@ public class EditSingleMovieController {
 
     @FXML
     private ImageView edit_movie_poster;
-
     @FXML
     private Button edit_movie_poster_button;
     @FXML
@@ -127,7 +126,6 @@ public class EditSingleMovieController {
     void backToSingleMovieView(ActionEvent event) {
         try {
 
-
             URL url = ClassLoader.getSystemResource("SingleMovieView.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             Parent parent = fxmlLoader.load();
@@ -140,10 +138,7 @@ public class EditSingleMovieController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
 
-
-
             stage.show();
-
 
         } catch(Exception e) {
             System.out.println(e + " handlePicClicked method HomeController");

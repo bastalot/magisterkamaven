@@ -21,6 +21,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -41,11 +42,13 @@ import java.util.Map;
 public class SingleSeriesController {
 
     public Label tvseries_genres_label;
+    public VBox series_peoples_vbox;
     URL url;
     String id;
     Image poster;
     byte[] bytes = null;
     String lastView;
+    JsonObject id_tvseries;
 
     public ImageView single_series_poster;
     public Button single_series_edit_button;
@@ -79,10 +82,13 @@ public class SingleSeriesController {
                 genres = parts[1];
             } else genres = null;
 
+            String startYear = single_series_start_year.getText().substring(single_series_start_year.getText().length()-4);
+            String endYear = single_series_end_year.getText().substring(single_series_end_year.getText().length()-4);
+
 
             EditSingleSeriesController editSingleSeriesController = fxmlLoader.getController();
             editSingleSeriesController.loadInitialData(id, single_series_title.getText(),
-                    single_series_start_year.getText(), single_series_end_year.getText(),
+                    startYear, endYear,
                     summary, poster, genres);
             editSingleSeriesController.setLastView(lastView);
 
@@ -146,6 +152,8 @@ public class SingleSeriesController {
         System.out.println(stringBuilder.toString());
 
         JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+        JsonParser jsonParser = new JsonParser();
+        id_tvseries = (JsonObject) jsonParser.parse(jsonObject.toString());
 
         if (jsonObject.get("title").toString() != "null") {
             single_series_title.setText(jsonObject.getString("title"));
@@ -226,7 +234,7 @@ public class SingleSeriesController {
 
             seasonNumber.setText(entry.getKey().toString());
             seasonNumber.setPrefHeight(27);
-            seasonNumber.setPrefWidth(20);
+            seasonNumber.setPrefWidth(35);
             seasonNumber.setFont(new Font("System", 18));
             Insets padding = new Insets(5,5,5,5);
             seasonNumber.setPadding(padding);
@@ -260,8 +268,37 @@ public class SingleSeriesController {
 
         }
 
-        tvseries_genres_label.setText(getSeriesGenres(id));
+        series_seasons_hbox.getChildren().get(series_seasons_hbox.getChildren().size()-1).setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Hyperlink seasonNumber = new Hyperlink();
+                seasonNumber = (Hyperlink) series_seasons_hbox.getChildren().get(series_seasons_hbox.getChildren().size()-1);
+                System.out.println("kliknieto ostatni sezon " + seasonNumber.getId().toString());
+                try {
+                    URL url = ClassLoader.getSystemResource("SingleSeassonView.fxml");
+                    FXMLLoader fxmlLoader = new FXMLLoader(url);
+                    Parent parent = fxmlLoader.load();
 
+                    SingleSeassonController singleSeassonController = fxmlLoader.getController();
+                    singleSeassonController.setLastView(lastView);
+                    singleSeassonController.getSeriesData(id);
+                    singleSeassonController.getSeassonData(seasonNumber.getId());
+                    singleSeassonController.setThisLastSeason(true);
+
+                    Scene scene = new Scene(parent);
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setScene(scene);
+                    stage.show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        tvseries_genres_label.setText(getSeriesGenres(id));
+        getSeriesPeople();
 
     }
 
@@ -293,18 +330,6 @@ public class SingleSeriesController {
 
     }
 
-    public ArrayList<String> getAllGenres() {
-
-        ArrayList<String> genres = new ArrayList<>();
-
-        String link = "http://localhost:8080/tvseriesgenres/all";
-
-
-
-        return genres;
-
-    }
-
     public String getSeriesGenres(String id) throws IOException {
 
         String genres = "Gatunki: ";
@@ -327,6 +352,36 @@ public class SingleSeriesController {
         }
 
         return genres;
+    }
+
+    public void getSeriesPeople() throws IOException {
+
+        JsonArray allSeriesPeople = new JsonArray();
+
+        String link = "http://localhost:8080/seriespeople/all";
+        URL url = new URL(link);
+        InputStream inputStream = url.openStream();
+        Reader reader = new InputStreamReader(inputStream, "utf-8");
+        JsonParser jsonParser = new JsonParser();
+        allSeriesPeople = (JsonArray) jsonParser.parse(reader);
+
+        for (int i = 0; i < allSeriesPeople.size(); i++) {
+            if (allSeriesPeople.get(i).getAsJsonObject().get("id_tvseries").equals(id_tvseries)) {
+                Label label = new Label();
+
+                String personName = allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("person_name").getAsString();
+                String characterName = allSeriesPeople.get(i).getAsJsonObject().get("character_name").getAsString();
+
+                label.setText(personName + " jako " + characterName);
+                label.setPadding(new Insets(5,5,5,5));
+                label.setPrefWidth(500);
+                if (i%2 == 0) {
+                    label.setStyle("-fx-background-color:rgba(119,119,119,0.19)");
+                }
+                series_peoples_vbox.getChildren().add(label);
+            }
+        }
+
     }
 
     public void editCast(ActionEvent actionEvent) {

@@ -22,12 +22,9 @@ import java.util.*;
 public class SeriesController implements Initializable {
 
     ObservableList<Pane> entries = FXCollections.observableArrayList();
-    String pickedYearGlobal = "Wybierz rok";
     String searchGlobal = "";
     String years = "";
 
-    @FXML
-    public ComboBox<String> series_combo_box;
     @FXML
     public TextField series_search;
     @FXML
@@ -37,9 +34,6 @@ public class SeriesController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("SeriesController working");
 
-        for (int i = 2020; i>=1900; i--){
-            series_combo_box.getItems().add(String.valueOf(i));
-        }
 
 
         Map<Integer, ListSeriesElementController> allSeries;
@@ -90,80 +84,6 @@ public class SeriesController implements Initializable {
 
         }
 
-    public void pickYear(ActionEvent actionEvent) {
-        System.out.println(series_combo_box.getValue());
-
-        series_list_view.getItems().clear();
-
-        if (series_combo_box.getValue().equals("Wybierz rok")) {
-            series_list_view.setItems(entries);
-        }
-
-
-        Map<Integer, ListSeriesElementController> allSeries;
-        try {
-            allSeries = getAllSeries();
-            System.out.println(allSeries.size());
-
-            HashMap<Integer, String> toBeSortedByTitle = new HashMap<>();
-            for (Map.Entry<Integer, ListSeriesElementController> entry: allSeries.entrySet()) {
-                toBeSortedByTitle.put(entry.getKey(), entry.getValue().titleString.toLowerCase());
-            }
-
-            LinkedHashMap<Integer, String> sortedByTitle = sortHashMapByValues(toBeSortedByTitle);
-
-            int i=0;
-
-            for (Map.Entry<Integer, String> entry: sortedByTitle.entrySet()) {
-
-                i++;
-
-                URL url = new File("src/main/resources/ListSeriesElement.fxml").toURI().toURL();
-                FXMLLoader fxmlLoader = new FXMLLoader(url);
-                Pane pane = (Pane) fxmlLoader.load();
-
-                ListSeriesElementController listSeriesElementController = fxmlLoader.getController();
-
-                ListSeriesElementController listSeriesElementController1 = allSeries.get(entry.getKey());
-
-                if (i % 2 == 1){
-                    listSeriesElementController.listElement.setStyle("-fx-background-color: #ffffff");
-                }
-
-                listSeriesElementController.setId(listSeriesElementController1.getId());
-                listSeriesElementController.setTitleString(listSeriesElementController1.getTitleString());
-                listSeriesElementController.setYearString(listSeriesElementController1.getYearString());;
-                listSeriesElementController.setDbId(listSeriesElementController1.getDbId());
-                listSeriesElementController.setValues();
-
-
-                pickedYearGlobal = series_combo_box.getValue();
-                String pickedYear ="(" + series_combo_box.getValue() + ")";
-
-                if(searchGlobal.equals("")){
-                    System.out.println("pick year if 1");
-                    if (listSeriesElementController.getYearString().equals(pickedYear)){
-                        series_list_view.getItems().add(pane);
-                        System.out.println("pick year if 1.1");
-                    }
-
-                } else {
-                    System.out.println("pick year else 1");
-                    if (pickedYear.equals(listSeriesElementController.getYearString()) && listSeriesElementController.getTitleString().toLowerCase().contains(searchGlobal)) {
-                        System.out.println("pick year else 1.1");
-                        series_list_view.getItems().add(pane);
-                    }
-                }
-
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void searchSeries(ActionEvent actionEvent) {
         System.out.println(series_search.textProperty().getValue());
@@ -212,23 +132,12 @@ public class SeriesController implements Initializable {
 
                     searchGlobal = series_search.textProperty().getValue().toLowerCase();
 
-                    if (pickedYearGlobal.equals("Wybierz rok")) {
-                        System.out.println("search series if 1");
-                        if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase())) {
-                            series_list_view.getItems().add(pane);
-                            System.out.println("search series if 1.1");
-                        }
 
-                    } else {
-                        String pickedYear = "(" + pickedYearGlobal + ")";
-                        String tempYear = listSeriesElementController.getYearString();
-                        System.out.println("search series else 1 " + pickedYear + " / " + tempYear + " | " + searchGlobal + " / " + series_search.textProperty().getValue().toLowerCase());
-                        if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase()) && (pickedYear.equals(tempYear))) {
+                        if (listSeriesElementController.getTitleString().toLowerCase().contains(series_search.textProperty().getValue().toLowerCase())) {
                             series_list_view.getItems().add(pane);
                             System.out.println("search series else 1.1");
                         }
                     }
-                }
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -34,23 +34,14 @@ public class HomeController implements Initializable {
 
     @FXML
     private ImageView movie1;
-
     @FXML
     private ImageView movie2;
-
     @FXML
     private ImageView movie3;
-
     @FXML
     private ImageView movie4;
-
     @FXML
     private ImageView movie5;
-
-
-  /*  public HomeController(ViewController viewController) {
-        this.viewController = viewController;
-    }*/
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -121,7 +112,6 @@ public class HomeController implements Initializable {
 
         System.out.println("po");
     }
-
 
     public Image getMovieImage(Integer id) throws IOException {
 

@@ -200,8 +200,10 @@ public class EditSeriesPeopleController {
 
                 HBox hBox = new HBox();
                 Label label = new Label();
-                label.setText(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("person_name").getAsString());
-                label.setId(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject().get("id_person").getAsString());
+                label.setText(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject()
+                        .get("person_name").getAsString());
+                label.setId(allSeriesPeople.get(i).getAsJsonObject().get("id_person").getAsJsonObject()
+                        .get("id_person").getAsString());
                 hBox.getChildren().add(label);
                 hBox.getChildren().add(new Label(" jako "));
 
@@ -230,7 +232,6 @@ public class EditSeriesPeopleController {
                 });
 
                 edit_series_people_cast_list.getItems().add(hBox);
-
             }
         }
     }

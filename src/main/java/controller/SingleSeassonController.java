@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,7 @@ public class SingleSeassonController {
     byte[] bytes = null;
     URL url;
     String lastView;
+    Boolean isThisLastSeason = false;
 
     public ImageView seassons_series_poster;
     public Button seassons_edit_button;
@@ -56,6 +58,61 @@ public class SingleSeassonController {
 
 
     public void editSeasson(ActionEvent actionEvent) {
+        try {
+            if (isThisLastSeason) {
+                url = ClassLoader.getSystemResource("EditLastSeassonView.fxml");
+                FXMLLoader fxmlLoader = new FXMLLoader(url);
+                Parent parent = fxmlLoader.load();
+
+                ObservableList<Node> textFlowList = seassons_summary_textflow.getChildren();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Node node : textFlowList) {
+                    stringBuilder.append(((Text)node).getText());
+                }
+                String summary = stringBuilder.toString();
+                String title = seassons_series_title.getText();
+                String startYear = seassons_series_start_year.getText();
+                String endYear = seassons_series_end_year.getText();
+                String seassonNumber = seassons_number_label.getText();
+
+                EditSingleSeassonController editSingleSeassonController = fxmlLoader.getController();
+                editSingleSeassonController.loadInitialData(id, title, startYear, endYear, seassonNumber, summary, poster, seriesid);
+                editSingleSeassonController.setLastView(lastView);
+                editSingleSeassonController.setLastSeasson(true);
+
+                Scene scene = new Scene(parent);
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                url = ClassLoader.getSystemResource("EditSingleSeassonView.fxml");
+                FXMLLoader fxmlLoader = new FXMLLoader(url);
+                Parent parent = fxmlLoader.load();
+
+                ObservableList<Node> textFlowList = seassons_summary_textflow.getChildren();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Node node : textFlowList) {
+                    stringBuilder.append(((Text)node).getText());
+                }
+                String summary = stringBuilder.toString();
+                String title = seassons_series_title.getText();
+                String startYear = seassons_series_start_year.getText();
+                String endYear = seassons_series_end_year.getText();
+                String seassonNumber = seassons_number_label.getText();
+
+                EditSingleSeassonController editSingleSeassonController = fxmlLoader.getController();
+                editSingleSeassonController.loadInitialData(id, title, startYear, endYear, seassonNumber, summary, poster, seriesid);
+                editSingleSeassonController.setLastView(lastView);
+                editSingleSeassonController.setLastSeasson(false);
+
+                Scene scene = new Scene(parent);
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void backToMenu(ActionEvent actionEvent) {
@@ -125,7 +182,11 @@ public class SingleSeassonController {
             JsonObject tvEpisodes = allEpisodes.get(i);
             //Integer id_tvepisode = tvEpisodes.get("id_tvepisodes").getAsInt();
             Integer episodeNumber = tvEpisodes.get("episode_number").getAsInt();
-            String episodeTitle = tvEpisodes.get("title").getAsString();
+            String episodeTitle;
+            System.out.println(String.valueOf(tvEpisodes.get("title")));
+            if (!String.valueOf(tvEpisodes.get("title")).equals("null"))
+                episodeTitle = tvEpisodes.get("title").getAsString();
+            else episodeTitle = null;
 
             episodeNumberTitle.put(episodeNumber, episodeTitle);
             //episodeIdTitle.put(id_tvepisode, episodeTitle);
@@ -254,5 +315,13 @@ public class SingleSeassonController {
 
     public void setLastView(String lastView) {
         this.lastView = lastView;
+    }
+
+    public Boolean getThisLastSeason() {
+        return isThisLastSeason;
+    }
+
+    public void setThisLastSeason(Boolean thisLastSeason) {
+        isThisLastSeason = thisLastSeason;
     }
 }
